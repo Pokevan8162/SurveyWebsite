@@ -1,0 +1,24 @@
+CREATE TABLE USERS {
+Email NVARCHAR (50) Primary Key,
+Password NVARCHAR (50),
+UserStatus NVARCHAR (50),
+Major NVARCHAR (50),
+Class NVARCHAR (50),
+Gender NVARCHAR (50)
+}
+
+CREATE TABLE QUESTIONS{
+FormName NVARCHAR(50),
+QuestionID INT,
+Question (250),
+PRIMARY KEY (FormName, QuestionID)
+}
+
+Responses{
+Email NVARCHAR
+FormName NVARCHAR(50),
+QuestionID INT,
+Answer NVARCHAR (250),
+PRIMARY KEY (Email, FormName, QuestionID)
+}
+
