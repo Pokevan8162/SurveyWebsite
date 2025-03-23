@@ -1,6 +1,7 @@
 CREATE TABLE USERS {
 Email NVARCHAR (50) Primary Key,
-Password NVARCHAR (50),
+Password VARCHAR (255),
+Salt VARCHAR (255),
 UserStatus NVARCHAR (50),
 Major NVARCHAR (50),
 Class NVARCHAR (50),
