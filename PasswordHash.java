@@ -17,7 +17,7 @@ public class PasswordHash {
 
 	// Add java server to referenced libraries
 
-	private String query;
+    private String query;
     private static final String DB_USER = "username"; // change
     private static final String DB_PASSWORD = "password"; // change
     private static final String databaseName = "name"; // change
@@ -43,7 +43,7 @@ public class PasswordHash {
         
     byte[] byteHash = md.digest(password.getBytes());
     String hashedPassword = bytesToHex(byteHash);
-		query = "INSERT INTO Users (username, password, salt) VALUES (?, ?, ?)";
+		query = "INSERT INTO Users (Email, Password, Palt) VALUES (?, ?, ?)";
 		try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 	        preparedStatement.setString(1, username);
 	        preparedStatement.setString(2, hashedPassword);
