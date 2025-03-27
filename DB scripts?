@@ -9,17 +9,24 @@ Gender NVARCHAR (50)
 }
 
 CREATE TABLE QUESTIONS{
-FormName NVARCHAR(50),
+SurveyID INT,
+SurveyName NVARCHAR(50),
 QuestionID INT,
+QuestionNumber INT,
+QuestionType NVARCHAR(50),
 Question (250),
-PRIMARY KEY (FormName, QuestionID)
+PRIMARY KEY (FormName, QuestionID, SurveyID)
 }
 
-Responses{
-Email NVARCHAR
+CREATE TABLE RESPONSES{
+Email NVARCHAR(50),
 FormName NVARCHAR(50),
 QuestionID INT,
 Answer NVARCHAR (250),
 PRIMARY KEY (Email, FormName, QuestionID)
 }
 
+CREATE TABLE SURVEYS{
+SurveyID INT AUTOINCREMENT PRIMARY KEY,
+SurveyName NVARCHAR(50)
+}
