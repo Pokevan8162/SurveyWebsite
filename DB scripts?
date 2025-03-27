@@ -1,32 +1,32 @@
-CREATE TABLE USERS {
-Email NVARCHAR (50) Primary Key,
-Password VARCHAR (255),
-Salt VARCHAR (255),
-UserStatus NVARCHAR (50),
-Major NVARCHAR (50),
-Class NVARCHAR (50),
-Gender NVARCHAR (50)
-}
+CREATE TABLE USERS (
+    Email NVARCHAR(50) PRIMARY KEY,
+    Password VARCHAR(255) NOT NULL,
+    Salt VARCHAR(255) NOT NULL,
+    UserStatus NVARCHAR(20),
+    Gender NVARCHAR(10)
+);
 
-CREATE TABLE QUESTIONS{
-SurveyID INT,
-SurveyName NVARCHAR(50),
-QuestionID INT,
-QuestionNumber INT,
-QuestionType NVARCHAR(50),
-Question (250),
-PRIMARY KEY (FormName, QuestionID, SurveyID)
-}
+CREATE TABLE QUESTIONS (
+    SurveyID INT NOT NULL,
+    QuestionNumber INT NOT NULL,
+    QuestionType NVARCHAR(50) NOT NULL,
+    Question NVARCHAR(250) NOT NULL,
+    PRIMARY KEY (SurveyID, QuestionNumber),
+    FOREIGN KEY (SurveyID) REFERENCES SURVEYS(SurveyID)ON DELETE CASCADE
+);
 
-CREATE TABLE RESPONSES{
-Email NVARCHAR(50),
-FormName NVARCHAR(50),
-QuestionID INT,
-Answer NVARCHAR (250),
-PRIMARY KEY (Email, FormName, QuestionID)
-}
+CREATE TABLE RESPONSES (
+    Email NVARCHAR(50),
+    SurveyID INT,
+    QuestionNumber INT,
+    Answer NVARCHAR(250),
+    PRIMARY KEY (Email, SurveyID, QuestionNumber),
+    FOREIGN KEY (Email) REFERENCES USERS(Email) ON DELETE CASCADE,
+    FOREIGN KEY (SurveyID) REFERENCES SURVEYS(SurveyID) ON DELETE CASCADE,
+    FOREIGN KEY (SurveyID, QuestionNumber) REFERENCES QUESTIONS(SurveyID, QuestionNumber) ON DELETE CASCADE
+);
 
-CREATE TABLE SURVEYS{
-SurveyID INT AUTOINCREMENT PRIMARY KEY,
-SurveyName NVARCHAR(50)
-}
+CREATE TABLE SURVEYS (
+    SurveyID INT AUTO_INCREMENT PRIMARY KEY,
+    SurveyName NVARCHAR(50) NOT NULL
+);
