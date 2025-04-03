@@ -21,12 +21,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputEmail = htmlspecialchars(trim($_POST['Email']));
     $inputPassword = trim($_POST['Password']);  //no hashing currently
 
-    // HASH METHOD HERE WITH PYTHON IMPLEMENTATION
+    $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($inputPassword));
+    $stmt = $pdo->prepare("SELECT Sat FROM USERS WHERE UserID = session.userID"); // change session userID to what actually works
+    $salt = $stmt->execute();
+    $hashedPassword += $salt;
+
+    // todolist: update login.php to this, update signin.php to include the password hash, and update passwordhash.java and make
+    // salt.java
 
     //fetch user data for comparing passwords
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
-    $stmt->bindParam(':Password', $inputPassword, PDO::PARAM_STR); //check password
+    $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR); //check password
+    $stmt->bindParam(':Salt', $hashedPassword, PDO::PARAM_STR);
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
