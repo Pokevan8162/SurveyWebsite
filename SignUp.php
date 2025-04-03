@@ -19,8 +19,11 @@ $error_message = "";
 //check if submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = htmlspecialchars(trim($_POST['email']));
-    $password = trim($_POST['password']);  //no hashing currently
     $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
+    $inputPassword = $_POST['password'];
+    $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($inputPassword));
+    $passwordSalt = shell_exec("java PasswordSalt.java");
+    $fullPassword = $hashedPassword + $passwordSalt;
 
     //check if email used alr
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email");
@@ -35,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         //insert into db
         $stmt = $pdo->prepare("INSERT INTO users (Email, Password, Gender) VALUES (:Email, :Password, :Gender)");
         $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':Password', $password, PDO::PARAM_STR); //pw not hashed
+        $stmt->bindParam(':Password', $fullPassword, PDO::PARAM_STR); //pw not hashed
         $stmt->bindParam(':Gender', $gender, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
