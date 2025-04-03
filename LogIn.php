@@ -16,22 +16,31 @@ try {
 // Initialize error message
 $error_message = "";
 
-//check if form submitted
+//if form is submitted with submit button
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $inputEmail = htmlspecialchars(trim($_POST['Email'])); 
+    $inputEmail = htmlspecialchars(trim($_POST['Email']));
     $inputPassword = trim($_POST['Password']);  //no hashing currently
 
+    //fetch user data for comparing passwords
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
-    $stmt->bindParam(':Password', $inputPassword, PDO::PARAM_STR); //check pw
+    $stmt->bindParam(':Password', $inputPassword, PDO::PARAM_STR); //check password
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
+        //start session, store user details
         $_SESSION['user_id'] = $user['ID'];
         $_SESSION['Email'] = $user['Email'];
-        header("Location: homepage.php");  //PUT THE PAGE WE WILL BE GOING TO FROM LOGIN HERE
+
+        if ($user['UserStatus'] === 'Admin') {
+            //redirect to admin dashboard if user is an Admin
+            header("Location: adminIndex.php");
+        } else {
+            //regular dashboard
+            header("Location: dashboard.php");
+        }
         exit;
     } else {
         $error_message = "Invalid email or password.";
