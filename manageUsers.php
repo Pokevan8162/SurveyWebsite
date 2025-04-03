@@ -1,4 +1,4 @@
-// This is for the admin to manage the users on the website
+<!-- This is for the admin to manage the users on the website -->
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
