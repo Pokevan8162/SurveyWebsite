@@ -4,17 +4,20 @@ body {
     color: black;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    /* Remove height: 100vh and add min-height and padding */
+    min-height: 100vh;
+    padding: 20px 0;
     margin: 0;
     position: relative;
 }
+
 .logo {
     position: absolute;
     top: 20px;
     left: 20px;
     width: 200px;
 }
+
 .container {
     display: flex;
     align-items: center;
@@ -22,36 +25,70 @@ body {
     flex-direction: column;
     text-align: center;
     width: 90%;
+    /* Add max-width if needed */
+    max-width: 800px;
 }
+
 .form_area {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     background-color: #f0f0f0d0;
-    padding: 20px;
+    padding: 30px;
     border: 2px solid #a7192f;
     border-radius: 20px;
     box-shadow: 3px 4px 0px 1px #a7192f;
-    width: 100% !important;
+    width: 100%;
+    /* Remove any fixed height and add margin */
+    margin: 20px 0;
 }
+
+/* Add a scrollable container for the questions */
+.questions-container {
+    width: 100%;
+    max-height: 70vh; /* Adjust as needed */
+    overflow-y: auto;
+    padding-right: 10px; /* Prevent scrollbar overlap */
+    margin-bottom: 20px;
+}
+
+/* Scrollbar styling */
+.questions-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.questions-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.questions-container::-webkit-scrollbar-thumb {
+    background: #a7192f;
+    border-radius: 10px;
+}
+
+.questions-container::-webkit-scrollbar-thumb:hover {
+    background: #8a1426;
+}
+
 .title {
     color: black;
     font-weight: 900;
     font-size: 1.5em;
     margin-top: 10px;
+    margin-bottom: 20px;
 }
-.sub_title {
-    font-weight: 600;
-    margin: 5px 0;
-}
+
+/* Rest of your existing CSS remains the same */
 .form_group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px;
-    margin-bottom: 20px;
+    margin: 15px 0;
+    width: 100%;
 }
+
 .form_style {
     outline: none;
     border: 2px solid #a7192f;
@@ -63,11 +100,11 @@ body {
     background-color: white;
     color: black;
 }
+
 .form_style:focus, .btn:focus {
     transform: translateY(4px);
     box-shadow: 1px 2px 0px 0px #a7192f;
 }
-
 
 .btn {
     padding: 10px 20px;
@@ -84,6 +121,7 @@ body {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
+
 .btn:hover {
     opacity: 0.9;
 }
@@ -93,9 +131,9 @@ body {
     justify-content: center;
 }
 
-.btn.selected{
-    background: #a7192f; /* Change to the desired dim color */
-    color: white
+.btn.selected {
+    background: #a7192f;
+    color: white;
 }
 
 .submit_btn {
@@ -117,19 +155,10 @@ body {
     opacity: 0.9;
 }
 
-.link {
-    font-weight: 800;
-    color: black;
-    padding: 5px;
-    text-decoration: none;
-}
-.link:hover {
-    color: #a7192f;
-    text-decoration: underline;
-}
-
 label {
     font-size: 18px;
     color: black;
     margin-bottom: 10px;
+    text-align: center;
+    max-width: 600px;
 }
