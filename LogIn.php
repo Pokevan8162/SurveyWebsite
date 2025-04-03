@@ -30,9 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        //start session, store user details
-        $_SESSION['user_id'] = $user['ID'];
-        $_SESSION['Email'] = $user['Email'];
+        //start session, store UserID to grab user specific information (ex. Gender for surveys)
+        $_SESSION['user_id'] = $user['UserID'];
 
         if ($user['UserStatus'] === 'Admin') {
             //redirect to admin dashboard if user is an Admin
