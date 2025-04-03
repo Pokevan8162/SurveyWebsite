@@ -21,6 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputEmail = htmlspecialchars(trim($_POST['Email']));
     $inputPassword = trim($_POST['Password']);  //no hashing currently
 
+    // HASH METHOD HERE WITH PYTHON IMPLEMENTATION
+
     //fetch user data for comparing passwords
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
