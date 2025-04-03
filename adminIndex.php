@@ -17,7 +17,7 @@
 	<div class="container">
 		<div class="form_area">
 		<div class="title">Welcome to the Administrator Page</div>
-			<a href="manageUser.php"><button type="button" class="btn">Manage Users</button></a>
+			<a href="manageUsers.php"><button type="button" class="btn">Manage Users</button></a>
 			<a href="viewSurveyResults.php"><button type="button" class="btn">See Survey Results</button></a>
 			<a href="viewSurvey.php"><button type="button" class="btn">Update Surveys</button></a>
 			<a href="createSurvey.php"><button type="button" class="btn">Create Survey</button></a>
