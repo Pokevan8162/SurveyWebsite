@@ -21,20 +21,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputEmail = htmlspecialchars(trim($_POST['Email']));
     $inputPassword = trim($_POST['Password']);
 
+    // Hash the password
     $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($inputPassword));
-    $stmt = $pdo->prepare("SELECT Salt FROM USERS WHERE UserID = session.userID"); // change session userID to what actually works
-    $salt = $stmt->execute();
+
+    // Grab the salt from the database
+    $stmt = $pdo->prepare("SELECT Salt FROM USERS WHERE Email = :Email");
+    $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
+    $stmt->execute();
+    $saltRow = $stmt->fetch(PDO::FETCH_ASSOC);
+    $salt = $saltRow['Salt'];
+
+    // Combine the salt with the password
     $hashedPassword += $salt;
 
     //fetch user data for comparing passwords
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
-    $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR); //check password
+    $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR); // verify password in database
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user) {
+    if ($user) { // if the user actually exists with that email and password,
         //start session, store UserID to grab user specific information (ex. Gender for surveys)
         $_SESSION['user_id'] = $user['UserID'];
 
