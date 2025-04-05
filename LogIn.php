@@ -27,8 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute();
     $saltRow = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$saltRow) {
-        die("Invalid email or password.");
-    }
+        $error_message = "Invalid email or password.";
+    } else { // Passed error, continue as normal
+            
     $salt = $saltRow['Salt'];
 
     // Combine the salt with the password
@@ -60,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     } else {
         $error_message = "Invalid email or password.";
+    }
     }
 }
 ?>
