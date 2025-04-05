@@ -19,35 +19,43 @@ $error_message = "";
 //check if submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = htmlspecialchars(trim($_POST['email']));
-    $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
+    $gender = $_POST['gender'];
     $inputPassword = $_POST['password'];
-    $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($inputPassword));
-    $passwordSalt = shell_exec("java PasswordSalt.java");
-    $fullPassword = $hashedPassword + $passwordSalt;
 
-    //check if email used alr
+    if (empty($email) || empty($inputPassword) || empty($gender)) {
+    $error_message = "All fields are required!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $error_message = "Invalid email format!";
+    } else { // Passed all errors, continue as normal.
+
+    // Find out if email already exists. If not, execute insert into database.
     $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email");
     $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
     $stmt->execute();
-    
-    if ($stmt->rowCount() > 0) {
+    if ($stmt->rowCount() > 0) { // if the email exists in the database,
         $error_message = "This email is already registered.";
-    } elseif (empty($email) || empty($password) || empty($gender)) {
-        $error_message = "All fields are required!";
     } else {
+        $salt = shell_exec("java PasswordSalt.java");
+        $salt = trim($salt); // trim in case java adds an extra line to the end
+        $password = $inputPassword . $salt;
+        $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($password));
+        $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
+    
         //insert into db
-        $stmt = $pdo->prepare("INSERT INTO users (Email, Password, Gender) VALUES (:Email, :Password, :Gender)");
+        $stmt = $pdo->prepare("INSERT INTO users (Email, Password, Gender, Salt) VALUES (:Email, :Password, :Gender, :Salt)");
         $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':Password', $fullPassword, PDO::PARAM_STR); //pw not hashed
+        $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindParam(':Salt', $salt, PDO::PARAM_STR);
         $stmt->bindParam(':Gender', $gender, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
-            header("Location: login.php");  //redirected to login page now to sign in
+            header("Location: login.php");  //redirect to login page now to sign in
             exit;
         } else {
             $error_message = "Something went wrong. Please try again.";
         }
     }
+}
 }
 ?>
 
