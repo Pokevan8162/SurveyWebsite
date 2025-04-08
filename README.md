@@ -53,6 +53,6 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 ---
 
-## ✍️ Author
+## ✍️ Authors
 
-Project by Jeremies (developer: [Your Name Here])
+Project by Ben Kuehner, Evan Stoller, Daniel Jackson, and Daniel Schager
