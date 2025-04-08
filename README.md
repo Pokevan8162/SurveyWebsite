@@ -44,6 +44,13 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 ---
 
+⚠️ PHP Include vs. Browser Load
+
+PHP require/include = server-side = use __DIR__ or relative filesystem paths
+CSS, images, JS = client-side = use browser-relative URLs
+
+---
+
 ## 🔒 Security Notes
 
 - Passwords are hashed using Java (`PasswordHash.java`) 
