@@ -4,8 +4,6 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 ---
 
----
-
 ## 🚀 Features
 
 ### ✅ User Authentication
@@ -17,9 +15,9 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 - **survey.php**: 
   - Displays all questions using required radio buttons.
   - Submits responses to database.
-  - Uses `reshuffle.php` (not yet implemented) to show random survey results.
+  - Uses `reshuffle.php` (TBD) to show random survey results.
   
-### ✅ Admin Capabilities (Planned)
+### ✅ Admin Capabilities (TBD)
 - Add/edit survey questions and responses.
 - Handle multiple surveys.
 - Store answers/responses as plain text files or in the database.
@@ -48,8 +46,8 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 ## 🔒 Security Notes
 
-- Passwords are hashed using Java (`PasswordHash.java`) — this should be integrated server-side or replaced with PHP’s `password_hash()` function.
-- Input validation and sanitization are recommended for production environments.
+- Passwords are hashed using Java (`PasswordHash.java`) 
+- Input validation and sanitization (TBD?).
 
 ---
 
