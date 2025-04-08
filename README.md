@@ -1,42 +1,58 @@
-# SurveyWebsite
-for jeremies
+# 📝 SurveyWebsite
 
+This is a web-based survey platform built with HTML, CSS, and PHP. The application allows users to register, log in, complete a survey, and submit their responses to a backend database.
 
-Db.php
-	Save queries for software development team
-	WHAT IS THIS FOR??????
-Register.php
-	Username must include @myemail.indwes.edu 
-	Password must be good
-	Encrypt password
-	Include a standard admin account
-	Include gender
-Login.php
-	If the user is not logged in, they should get booted to this page
-	Include a way for users to change password, Probably a separate PHP file
-Logout.php
+---
 
+---
 
-Survey.php
-	All in one page
-	Radio buttons
-	All questions are required
-	After submitted, send to database, refer to reshuffle.php
-Reshuffle.php	
-	Grab a random survey
-	Display survey results to user
-	Grab response from user
-index.php
+## 🚀 Features
 
+### ✅ User Authentication
+- **Register**: Requires `@myemail.indwes.edu` email. Passwords are encrypted. Gender field included.
+- **Login**: Redirects unauthorized users to login. Includes plan for password reset functionality.
+- **Logout**: Ends user session.
 
-Admin needs to be able to add questions, including text responses
-Maybe allow for multiple surveys and multiple responses
-3 tables Database has: 
-username, encrypted password, gender, survey id. 	//User
-survey id, location 						//for answers
-Survey id, username 					//for responses
-Surveys are txt documents that contain only answers
-	Another txt document contains questions that admin has editing access
-	Another txt document contains the response
+### ✅ Survey Functionality
+- **survey.php**: 
+  - Displays all questions using required radio buttons.
+  - Submits responses to database.
+  - Uses `reshuffle.php` (not yet implemented) to show random survey results.
+  
+### ✅ Admin Capabilities (Planned)
+- Add/edit survey questions and responses.
+- Handle multiple surveys.
+- Store answers/responses as plain text files or in the database.
 
+---
 
+## 🗃️ Database Tables (Planned)
+
+| Table         | Fields                                    | Description                            |
+|---------------|-------------------------------------------|----------------------------------------|
+| `users`       | `username`, `password (encrypted)`, `gender`, `survey_id` | Stores user data                      |
+| `answers`     | `survey_id`, `location`                   | Stores answer options                  |
+| `responses`   | `survey_id`, `username`                   | Stores user responses to surveys       |
+
+---
+
+## ⚙️ Setup Instructions
+
+1. Clone or download this repository.
+2. Set up a PHP server (e.g., XAMPP or MAMP).
+3. Import the SQL file in `database/schema.sql` to your local MySQL server.
+4. Ensure file paths in your HTML/PHP files align with this new structure.
+5. Run `index.html` to get started.
+
+---
+
+## 🔒 Security Notes
+
+- Passwords are hashed using Java (`PasswordHash.java`) — this should be integrated server-side or replaced with PHP’s `password_hash()` function.
+- Input validation and sanitization are recommended for production environments.
+
+---
+
+## ✍️ Author
+
+Project by Jeremies (developer: [Your Name Here])
