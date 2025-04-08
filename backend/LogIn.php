@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: adminIndex.php");
         } else {
             //regular dashboard
-            header("Location: dashboard.php");
+            header("Location: index.php");
         }
         exit;
     } else {
