@@ -50,6 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($user) { // if the user actually exists with that email and password,
         //start session, store UserID to grab user specific information (ex. Gender for surveys)
         $_SESSION['user_id'] = $user['UserID'];
+        $_SESSION['Email'] = $user['Email'];
+        $_SESSION['UserStatus'] = $user['UserStatus'];
 
         if ($user['UserStatus'] === 'Admin') {
             //redirect to admin dashboard if user is an Admin
