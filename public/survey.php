@@ -1,8 +1,8 @@
 <?php
-include 'backend/db.php';
+require_once __DIR__ . '/../backend/db.php';
 session_start();
 
-// Debuging step:
+// Debugging step:
 // $debug = $pdo->query("SELECT QuestionNumber, Question FROM QUESTIONS ORDER BY QuestionNumber")->fetchAll();
 // echo "<pre>"; print_r($debug); echo "</pre>"; exit;
 
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="resources/css/survey.css"> 
+    <link rel="stylesheet" href="../resources/css/survey.css"> 
     
     <title>Questionnaire</title>
     <style>
