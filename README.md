@@ -1,6 +1,6 @@
 # 📝 SurveyWebsite
 
-This is a web-based survey platform built with HTML, CSS, and PHP. The application allows users to register, log in, complete a survey, and submit their responses to a backend database.
+This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. The application allows users to register, log in, complete a survey, and submit their responses to a backend database. An admin page is also available to edit and monitor surveys. 
 
 ---
 
