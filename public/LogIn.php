@@ -1,17 +1,6 @@
 <?php
+require_once "db.php";
 session_start();
-
-$host = 'localhost';    //host
-$dbname = "survey_db";  // db name
-$dbUsername = "root";   // db username
-$dbPassword = "";       // db password
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $dbUsername, $dbPassword);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . htmlspecialchars($e->getMessage()));
-}
 
 // Initialize error message
 $error_message = "";
@@ -73,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../resources/css/introPages.css">
+    <link rel="stylesheet" href="introPages.css">
     <title>Log In</title>
 </head>
 <body>
