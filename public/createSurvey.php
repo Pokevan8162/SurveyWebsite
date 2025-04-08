@@ -1,5 +1,7 @@
 <?php
-include 'backend/db.php';
+//This not working btw:
+//include 'backend/db.php';
+require_once __DIR__ . '/../backend/db.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
