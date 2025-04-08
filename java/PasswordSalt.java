@@ -1,4 +1,5 @@
-import java.security.NoSuchAlgorithmException;
+package JeremyWebsite;
+
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -10,7 +11,7 @@ public class PasswordSalt {
 	    return Base64.getEncoder().encodeToString(salt);
 	}
 	
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	public static void main(String[] args) {
 		PasswordSalt salter = new PasswordSalt();
 		String salt = salter.season();
 		System.out.println(salt); // print to console so PHP can grab it
