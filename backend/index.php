@@ -1,11 +1,11 @@
 <?php
-session_start(); // Always start the session
+session_start();
 
 try {
     $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Check if the user is logged in
+    // session check
     if (!isset($_SESSION['user_id'])) {
         echo "Please log in to view surveys.";
         exit;
@@ -19,8 +19,8 @@ try {
     if ($user) {
         $gender = $user['Gender'];
 
-        // Get surveys that match this gender (optionally include 'All' surveys too)
-        $surveyStmt = $conn->prepare("SELECT * FROM SURVEYS WHERE SurveyGender = :gender OR SurveyGender = 'All'");
+        // Get surveys that match this gender
+        $surveyStmt = $conn->prepare("SELECT * FROM SURVEYS WHERE SurveyGender = :gender);
         $surveyStmt->bindParam(':gender', $gender);
         $surveyStmt->execute();
         $surveys = $surveyStmt->fetchAll();
