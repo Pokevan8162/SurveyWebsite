@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'backend/db.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
