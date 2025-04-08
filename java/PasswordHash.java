@@ -1,15 +1,7 @@
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+package JeremyWebsite;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Base64;
 
 public class PasswordHash {
 
@@ -21,6 +13,14 @@ public class PasswordHash {
 
 		return hashedPassword;
 	}
+	
+	private String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            hexString.append(String.format("%02x", b));
+        }
+        return hexString.toString();
+    }
 	
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		PasswordHash hasher = new PasswordHash();
