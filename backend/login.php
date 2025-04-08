@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="gpustyle.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/gpustyle.css">
 </head>
 <body>
     <form method="POST">
