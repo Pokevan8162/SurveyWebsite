@@ -1,5 +1,5 @@
 <?php
-require_once "db.php";
+require_once __DIR__ . '/../backend/db.php';
 session_start();
 
 // Initialize error message
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $inputPassword . $salt;
 
     // Hash the password with the salt
-    $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($password));
+    $hashedPassword = shell_exec("java -cp " . __DIR__ . "/../java PasswordHash " . escapeshellarg($password));
     $hashedPassword = trim($hashedPassword); // Trim in case Java prints a new line at the end
 
     //fetch user data for comparing passwords
