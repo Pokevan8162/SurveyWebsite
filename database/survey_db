@@ -23,14 +23,12 @@ CREATE TABLE QUESTIONS (
 );
 
 CREATE TABLE RESPONSES (
-    Email VARCHAR(50),
+    UserID INT,
     SurveyID INT,
     QuestionNumber INT,
     Answer VARCHAR(250),
-    PRIMARY KEY (Email, SurveyID, QuestionNumber),
-    FOREIGN KEY (Email) REFERENCES USERS(Email) ON DELETE CASCADE,
+    PRIMARY KEY (UserID, SurveyID, QuestionNumber),
+    FOREIGN KEY (UserID) REFERENCES USERS(UserID) ON DELETE CASCADE,
     FOREIGN KEY (SurveyID) REFERENCES SURVEYS(SurveyID) ON DELETE CASCADE,
     FOREIGN KEY (SurveyID, QuestionNumber) REFERENCES QUESTIONS(SurveyID, QuestionNumber) ON DELETE CASCADE
 );
-
-
