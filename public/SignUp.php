@@ -1,5 +1,5 @@
 <?php
-require_once "db.php";
+require_once __DIR__ . '/../backend/db.php';
 session_start();
 
 // Initialize error message
@@ -24,10 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($stmt->rowCount() > 0) { // if the email exists in the database,
         $error_message = "This email is already registered.";
     } else {
-        $salt = shell_exec("java PasswordSalt.java");
+        $salt = shell_exec("java -cp " . __DIR__ . "/../java PasswordSalt");
         $salt = trim($salt); // trim in case java adds an extra line to the end
         $password = $inputPassword . $salt;
-        $hashedPassword = shell_exec("java PasswordHash.java " . escapeshellarg($password));
+        $hashedPassword = shell_exec("java -cp " . __DIR__ . "/../java PasswordHash " . escapeshellarg($password));
         $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
     
         //insert into db
