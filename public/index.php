@@ -11,7 +11,7 @@ if ($user) {
     $gender = $user['Gender'];
 
     // Get surveys that match this gender
-    $surveyStmt = $conn->prepare("SELECT * FROM SURVEYS WHERE SurveyGender = :gender);
+    $surveyStmt = $conn->prepare("SELECT * FROM SURVEYS WHERE SurveyGender = :gender");
     $surveyStmt->bindParam(':gender', $gender);
     $surveyStmt->execute();
     $surveys = $surveyStmt->fetchAll();
