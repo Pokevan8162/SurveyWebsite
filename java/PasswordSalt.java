@@ -1,5 +1,3 @@
-package JeremyWebsite;
-
 import java.security.SecureRandom;
 import java.util.Base64;
 
