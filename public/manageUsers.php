@@ -1,19 +1,7 @@
 <!-- This is for the admin to manage the users on the website -->
 <?php
 session_start();
-
-try {
-    $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // session check
-    if (!isset($_SESSION['user_id'])) {
-        echo "<a href=login.php>Please log in to view surveys.</a>";
-        exit;
-    }
-} catch (PDOException $e) {
-    echo 'Database error: ' . $e->getMessage();
-}
+require_once __DIR__ . '/../backend/db.php';
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
