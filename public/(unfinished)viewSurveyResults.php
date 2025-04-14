@@ -15,7 +15,7 @@ Use JavaScript + AJAX for live updates (e.g., chart.js or simple polling).
 */
 
 <?php
-include 'db.php';
+require_once __DIR__ . '/../backend/db.php';
 
 if (!isset($_GET['survey_id'])) {
     die("Survey ID not specified.");
