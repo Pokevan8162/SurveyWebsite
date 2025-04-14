@@ -22,9 +22,6 @@ require_once __DIR__ . '/../backend/db.php';
         <div class="form_area">
             <div class="title">Administrative Users</div>
             <?php
-                // Database connection
-                $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
-
                 // Fetch all admins from the Database
                 $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='admin'");
                 $stmt->execute();
