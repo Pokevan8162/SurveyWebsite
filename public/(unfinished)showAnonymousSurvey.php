@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db.php'; // Make sure this connects to your DB
+require_once __DIR__ . '/../backend/db.php';
 
 // Get current user's email and last completed SurveyID
 $userEmail = $_SESSION['email'];
