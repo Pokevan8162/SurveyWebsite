@@ -1,7 +1,6 @@
-<!-- This is for the admin to manage the users on the website -->
 <?php
-session_start();
-require_once __DIR__ . '/../backend/db.php';
+    session_start();
+    require_once __DIR__ . '/../backend/db.php';
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -17,74 +16,113 @@ require_once __DIR__ . '/../backend/db.php';
         <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
     </div>
     <div class="container">
-        <!-- Administrators -->
-         <h1>Manage Users</h1>
+
+    <?php
+        $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
+
+        // Handle Admin Updates
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['update_admins']) && isset($_POST['admins'])) {
+                foreach ($_POST['admins'] as $user) {
+                    $inputPassword = $user['password'];
+                    $salt = shell_exec("java -cp " . __DIR__ . "/../java PasswordSalt");
+                    $salt = trim($salt); // trim in case java adds an extra line to the end
+                    $password = $inputPassword . $salt;
+                    $hashedPassword = shell_exec("java -cp " . __DIR__ . "/../java PasswordHash " . escapeshellarg($password));
+                    $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
+
+                    $stmt = $conn->prepare("UPDATE users SET Email = :email, Password = :password, Salt = :salt, UserStatus = :userStatus, Gender = :gender WHERE Email = :email");
+                    $stmt->bindParam(':email', $user['email']);
+                    $stmt->bindParam(':password', $hashedPassword);
+                    $stmt->bindParam(':salt', $salt);
+                    $stmt->bindParam(':userStatus', $user['userStatus']);
+                    $stmt->bindParam(':gender', $user['gender']);
+                    $stmt->execute();
+                }
+                echo "<p style='color:green;'>Admin users updated!</p>";
+            }
+
+            // Handle Regular User Updates
+            if (isset($_POST['update_users']) && isset($_POST['users'])) {
+                foreach ($_POST['users'] as $user) {
+                    $inputPassword = $user['password'];
+                    $salt = shell_exec("java -cp " . __DIR__ . "/../java PasswordSalt");
+                    $salt = trim($salt); // trim in case java adds an extra line to the end
+                    $password = $inputPassword . $salt;
+                    $hashedPassword = shell_exec("java -cp " . __DIR__ . "/../java PasswordHash " . escapeshellarg($password));
+                    $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
+
+                    $stmt = $conn->prepare("UPDATE users SET Email = :email, Password = :password, Salt = :salt, UserStatus = :userStatus, Gender = :gender WHERE Email = :email");
+                    $stmt->bindParam(':email', $user['email']);
+                    $stmt->bindParam(':password', $hashedPassword);
+                    $stmt->bindParam(':salt', $salt);
+                    $stmt->bindParam(':userStatus', $user['userStatus']);
+                    $stmt->bindParam(':gender', $user['gender']);
+                    $stmt->execute();
+                }
+                echo "<p style='color:green;'>Regular users updated!</p>";
+            }
+        }
+    ?>
+
+    <!-- Admin Section -->
+    <form method="POST">
         <div class="form_area">
             <div class="title">Administrative Users</div>
+            <div class="user">
+                <input type="email" value="Email" size="40" readonly>
+                <input type="text" value="Password" size="20" readonly>
+                <input type="text" value="User Status" size="10" readonly>
+                <input type="text" value="Gender" size="10" readonly>
+            </div>
+
             <?php
-                // Fetch all admins from the Database
                 $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='admin'");
                 $stmt->execute();
                 $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Display admins and functionality
-                echo "<div class='user'>";
-                echo "<input type='email' id='email' value='Email' size='40' readonly>";
-                echo "<input type='text' id='password' value='Password' size='20' readonly>";
-                echo "<input type='text' id='userStatus' value='User Status' size='10' readonly>";
-                echo "<input type='text' id='gender' value='Gender' size='10' readonly>";
-                echo "</div>";
-                foreach ($admins as $admin) {
-                    $Email = htmlspecialchars($admin['Email']);
-                    $Password = htmlspecialchars($admin['Password']);
-                    $Salt = htmlspecialchars($admin['Salt']);
-                    $UserStatus = htmlspecialchars($admin['UserStatus']);
-                    $Gender = htmlspecialchars($admin['Gender']);
-
+                foreach ($admins as $index => $admin) {
                     echo "<div class='user'>";
-                    echo "<input type='email' id='email' value='$Email' size='40'>";
-                    echo "<input type='text' id='password' value='$Password' size='20'>";
-                    echo "<input type='text' id='userStatus' value='$UserStatus' size='10'>";
-                    echo "<input type='text' id='gender' value='$Gender' size='10'>";
+                    echo "<input type='email' name='admins[$index][email]' value='".htmlspecialchars($admin['Email'])."' size='40' readonly>";
+                    echo "<input type='text' name='admins[$index][password]' size='20'>";
+                    echo "<input type='text' name='admins[$index][userStatus]' value='".htmlspecialchars($admin['UserStatus'])."' size='10'>";
+                    echo "<input type='text' name='admins[$index][gender]' value='".htmlspecialchars($admin['Gender'])."' size='10'>";
                     echo "</div>";
                 }
             ?>
+            <button type="submit" name="update_admins" class="btn">Update All Admins</button>
         </div>
-    
-        <!-- Users -->
+    </form>
+
+    <!-- User Section -->
+    <form method="POST">
         <div class="form_area">
             <div class="title">Users</div>
+            <div class="user">
+                <input type="email" value="Email" size="40" readonly>
+                <input type="text" value="Password" size="20" readonly>
+                <input type="text" value="User Status" size="10" readonly>
+                <input type="text" value="Gender" size="10" readonly>
+            </div>
+
             <?php
-                // Fetch all users from the Database
-                $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='user'");
+                $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='User'");
                 $stmt->execute();
                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
-                echo "<div class='user'>";
-                echo "<input type='email' id='email' value='Email' size='40'>";
-                echo "<input type='text' id='password' value='Password' size='20'>";
-                echo "<input type='text' id='userStatus' value='User Status' size='10'>";
-                echo "<input type='text' id='gender' value='Gender' size='10'>";
-                echo "</div>";
 
-                foreach ($users as $user) {
-                    $Email = htmlspecialchars($user['Email']);
-                    $Password = htmlspecialchars($user['Password']);
-                    $Salt = htmlspecialchars($user['Salt']);
-                    $UserStatus = htmlspecialchars($user['UserStatus']);
-                    $Gender = htmlspecialchars($user['Gender']);
-
-                    // Display the functionality for each user, display email, password, userstatus, and gender is editable texts with an update button in a row
+                foreach ($users as $index => $user) {
                     echo "<div class='user'>";
-                    echo "<input type='email' id='email' value='$Email' size='40'>";
-                    echo "<input type='text' id='password' value='$Password' size='20'>";
-                    echo "<input type='text' id='userStatus' value='$UserStatus' size='10'>";
-                    echo "<input type='text' id='gender' value='$Gender' size='10'>";
+                    echo "<input type='email' name='users[$index][email]' value='".htmlspecialchars($user['Email'])."' size='40' readonly>";
+                    echo "<input type='text' name='users[$index][password]' size='20'>";
+                    echo "<input type='text' name='users[$index][userStatus]' value='".htmlspecialchars($user['UserStatus'])."' size='10'>";
+                    echo "<input type='text' name='users[$index][gender]' value='".htmlspecialchars($user['Gender'])."' size='10'>";
                     echo "</div>";
-            	}
+                }
             ?>
-	    </div>
-        <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
+            <button type="submit" name="update_users" class="btn">Update All Users</button>
+        </div>
+    </form>
+
     </div>
 </body>
 </html>
