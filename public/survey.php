@@ -8,13 +8,16 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$userID = $_SESSION['user_id'];
-$surveyID = $_GET['id'] ?? null;
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["survey_id"])) {
+    $_SESSION["SurveyID"] = $_POST["survey_id"];
+}
 
-if (!$surveyID) {
+// Make sure SurveyID is set
+if (!isset($_SESSION['SurveyID'])) {
     echo "No survey selected.";
     exit;
 }
+$surveyID = $_SESSION['SurveyID'];
 
 // Fetch only questions for this specific survey by ID
 $stmt = $pdo->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
@@ -32,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    header("Location: thank_you.php");
+    header("Location: showAnonymousSurvey.php");
     exit;
 }
 ?>
