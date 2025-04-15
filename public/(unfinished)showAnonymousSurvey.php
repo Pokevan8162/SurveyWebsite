@@ -11,19 +11,18 @@ $stmt = $conn->prepare("
     SELECT r.Email, q.QuestionNumber, q.Question, r.Answer
     FROM RESPONSES r
     JOIN QUESTIONS q ON r.SurveyID = q.SurveyID AND r.QuestionNumber = q.QuestionNumber
-    WHERE r.SurveyID = ? AND r.Email != ?
+    WHERE r.SurveyID = :surveyID AND r.Email != :userEmail
     ORDER BY RAND()
     LIMIT 5
 ");
-$stmt->bind_param("is", $surveyID, $userEmail);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute(['surveyID' => $surveyID, 'userEmail' => $userEmail]);
+$result = $stmt->fetchAll();
 
-if ($result->num_rows > 0) {
+if (count($result) > 0) {
     echo "<h2>Reflect on This Anonymous Survey:</h2>";
     $displayedEmail = null;
 
-    while ($row = $result->fetch_assoc()) {
+    foreach ($result as $row) {
         // Save the other user's email in session for logging this interaction if needed
         if (!$displayedEmail) {
             $displayedEmail = $row['Email'];
