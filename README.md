@@ -13,24 +13,26 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 ### ✅ Survey Functionality
 - **survey.php**: 
-  - Displays all questions using required radio buttons.
+  - Displays all questions using required radio buttons by fetching surveyID chosen in index.php
   - Submits responses to database.
   - Uses `reshuffle.php` (TBD) to show random survey results.
   
-### ✅ Admin Capabilities (TBD)
+### ✅ Admin Capabilities
 - Add/edit survey questions and responses.
+- Edit user statuses and info
 - Handle multiple surveys.
 - Store answers/responses as plain text files or in the database.
 
 ---
 
-## 🗃️ Database Tables (Planned)
+## 🗃️ Database Tables
 
 | Table         | Fields                                    | Description                            |
 |---------------|-------------------------------------------|----------------------------------------|
-| `users`       | `username`, `password (encrypted)`, `gender`, `survey_id` | Stores user data                      |
-| `answers`     | `survey_id`, `location`                   | Stores answer options                  |
-| `responses`   | `survey_id`, `username`                   | Stores user responses to surveys       |
+| `users`       | `UserID`, `Email`, `Password`, `Salt`, `gender`, `UserStatus` | Stores user data                      |
+| `questions`   | `SurveyID`, `QuestionNumber`, `QuestionType`, `Question`  | Stores answer options                  |
+| `surveys`     | `SurveyID`, `SurveyName`,`SurveyGender`   | Stores user responses to surveys       |
+| `responses`   | `SurveyID`, `UserID`, `QuestionNumber`, `Answer`       | Stores user responses to surveys       |
 
 ---
 
