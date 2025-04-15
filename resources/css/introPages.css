@@ -5,7 +5,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     margin: 0;
     position: relative;
 }
@@ -90,4 +91,53 @@ body {
 .link:hover {
     color: #a7192f;
     text-decoration: underline;
+}
+
+.survey-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.survey-card {
+    background-color: #ffffffcc;
+    border: 2px solid #a7192f;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 4px 5px 0px 1px #a7192f;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+}
+
+.survey-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 6px 7px 0px 1px #a7192f;
+}
+
+.survey-title {
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.btn {
+    padding: 12px 24px;
+    background: #a7192f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 2px 3px 0px 0px #a7192f;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    opacity: 0.9;
 }
