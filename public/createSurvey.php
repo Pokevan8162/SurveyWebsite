@@ -1,56 +1,53 @@
 <?php
-//This not working btw:
-//include 'backend/db.php';
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 
     $survey_title = htmlspecialchars($_POST["survey_title"] ?? "Unnamed Survey", ENT_QUOTES, 'UTF-8');
+    $survey_gender = htmlspecialchars($_POST["survey_gender"] ?? "Neutral", ENT_QUOTES, 'UTF-8');
     $questions = $_POST["questions"] ?? [];
 
     try {
-        $pdo->beginTransaction(); // Begin a transaction for atomicity (either want it to fully complete or do nothing at all)
+        $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("INSERT INTO SURVEYS(SurveyName) VALUES (?)");
-        $stmt->execute([$survey_title]);
+        // Insert survey with title and gender
+        $stmt = $pdo->prepare("INSERT INTO SURVEYS(SurveyName, SurveyGender) VALUES (?, ?)");
+        if ($survey_gender == "Neutral") {
+            $genders = ["Female", "Male"];
+            foreach ($genders as $gender) {
+                $stmt->execute([$survey_title, $gender]);
+                $surveyID = $pdo->lastInsertId();
 
-        // Get the survey ID of the survey that we just posted
-        $surveyID = $pdo->lastInsertId();
+                foreach ($questions as $index => $question) {
+                    $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
+                    $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
 
-        foreach ($questions as $index => $question) {
-            $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
-            $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
+                    $stmtQ = $pdo->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
+                                        VALUES(?, ?, ?, ?)");
+                    $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
+                }
+            }
+        } else {
+            $stmt->execute([$survey_title, $survey_gender]);
+            $surveyID = $pdo->lastInsertId();
 
-            $stmt = $pdo->prepare("INSERT INTO QUESTIONS(SurveyID, SurveyName, QuestionNumber, QuestionType, Question)
-                               VALUES(?, ?, ?, ?, ?)");
-            $stmt->execute([$surveyID, $survey_title, $index + 1, $question_type, $question_text]);
+            foreach ($questions as $index => $question) {
+                $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
+                $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
+
+                $stmtQ = $pdo->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
+                                    VALUES(?, ?, ?, ?)");
+                $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
+            }
         }
 
-        $pdo->commit(); // Finish transaction
+
+        $pdo->commit();
     } catch (Exception $e) {
         $pdo->rollBack();
         die("Error: " . $e->getMessage());
     }
-
-    
-    // --------------- For creating a survey file if we ever want to do that
-
-    // if (!empty($questions)) {
-    //     $filename = "survey.txt";
-    //     $file = fopen($filename, "w");
-    //     fwrite($file, "Survey Title: " . $survey_title . "\n\n");
-
-    //     foreach ($questions as $index => $question) {
-    //         fwrite($file, "Q" . ($index + 1) . ": " . $question["text"] . " (" . $question["type"] . ")\n");
-    //     }
-
-    //     fclose($file);
-    //     echo "<p>Survey saved successfully! Check <a href='$filename' target='_blank'>$filename</a>.</p>";
-    // } else {
-    //     echo "<p>No questions were added.</p>";
-    // }
-
 }
 ?>
 
@@ -58,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Survey</title>
     <script>
         function addQuestion() {
@@ -76,6 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
                     <option value="Short Answer">Short Answer</option>
                 </select>
                 <button type="button" onclick="removeQuestion(this)">Remove</button>
+                <br><br>
             `;
             container.appendChild(div);
         }
@@ -83,6 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
         function removeQuestion(button) {
             button.parentElement.remove();
         }
+
+        // Add one default question on page load
+        window.onload = function () {
+            addQuestion();
+        };
     </script>
 </head>
 <body>
@@ -91,6 +93,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
         <label>Survey Title:</label>
         <input type="text" name="survey_title" required>
         <br><br>
+
+        <label>Survey Gender:</label>
+        <select name="survey_gender" required>
+            <option value="">-- Select Gender Context --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Neutral">Neutral</option>
+        </select>
+        <br><br>
+
         <div id="questionsContainer"></div>
         <button type="button" onclick="addQuestion()">Add Question</button>
         <br><br>
