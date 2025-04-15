@@ -18,15 +18,16 @@ if (!isset($_SESSION['SurveyID'])) {
     exit;
 }
 $surveyID = $_SESSION['SurveyID'];
+$userID = $_SESSION['user_id'];
 
 // Fetch only questions for this specific survey by ID
-$stmt = $pdo->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
+$stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
 $stmt->execute([$surveyID]);
 $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $stmt = $pdo->prepare("INSERT INTO RESPONSES (UserID, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO RESPONSES (UserID, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
 
     foreach ($questions as $question) {
         $qNum = $question['QuestionNumber'];
