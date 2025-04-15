@@ -4,7 +4,7 @@ require_once __DIR__ . '/../backend/db.php';
 
 // Get current user's email and last completed SurveyID
 $userEmail = $_SESSION['email'];
-$surveyID = $_SESSION['SurveyID']; // Make sure this was saved after survey submission
+$surveyID = $_SESSION['SurveyID'];
 
 // Get a random response from a different user for the same SurveyID
 $stmt = $conn->prepare("
