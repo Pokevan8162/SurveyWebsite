@@ -20,6 +20,15 @@ if (!isset($_SESSION['SurveyID'])) {
 $surveyID = $_SESSION['SurveyID'];
 $userID = $_SESSION['user_id'];
 
+$stmt = $conn->prepare("SELECT * FROM RESPONSES WHERE SurveyID = ? AND UserID = ?");
+$stmt->execute([$surveyID, $userID]);
+$questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (count($responses) > 0) {
+    echo "You have already taken this survey.";
+    exit;
+}
+
 // Fetch only questions for this specific survey by ID
 $stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
 $stmt->execute([$surveyID]);
