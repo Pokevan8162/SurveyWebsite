@@ -14,8 +14,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($email) || empty($inputPassword) || empty($gender)) {
     $error_message = "All fields are required!";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $error_message = "Invalid email format!";
-    } else { // Passed all errors, continue as normal.
+        $error_message = "Invalid email format!";
+    } elseif (!preg_match('/@(myemail\.indwes\.edu | indwes\.edu)$/i', $email)) {
+        $error_message = "Email must be an @myemail.indwes.edu or @indwes.edu address.";
+    } else { // Passed
 
     // Find out if email already exists. If not, execute insert into database.
     $stmt = $conn->prepare("SELECT * FROM users WHERE Email = :Email");
