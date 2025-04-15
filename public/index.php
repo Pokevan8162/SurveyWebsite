@@ -10,7 +10,7 @@ try {
     }
     
     $stmt = $conn->prepare("SELECT Gender FROM USERS WHERE UserID = :userID");
-    $stmt->bindParam(':userID', $_SESSION['user_id']); // use same session key
+    $stmt->bindParam(':userID', $_SESSION['user_id']);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -23,7 +23,9 @@ try {
         $surveyStmt->execute();
         $surveys = $surveyStmt->fetchAll();
 
-        echo "<h1>Available Surveys for You</h1>";
+        echo "<div class='container'>";
+        echo "<div class='form_area'>";
+        echo "<div class='title'>Available Surveys</div>";
         echo "<div class='survey-list'>";
 
         if (count($surveys) > 0) {
@@ -31,15 +33,20 @@ try {
                 $surveyName = htmlspecialchars($survey['SurveyName']);
                 $surveyID = (int)$survey['SurveyID'];
 
-                echo "<div class='survey'>";
-                echo "<h3>$surveyName</h3>";
-                echo "<a href='survey.php?id=$surveyID'>Take Survey</a>";
+                echo "<div class='survey-card'>";
+                echo "<h3 class='survey_title'>$surveyName</h3>";
+                echo "<form action='survey.php' method='post'>";
+                echo "<input type='hidden' name='survey_id' value='$surveyID'>";
+                echo "<button type='submit' class='btn'>Take Survey</button>";
+                echo "</form>";
                 echo "</div>";
             }
         } else {
             echo "<p>No surveys available for your profile.</p>";
         }
 
+        echo "</div>";
+        echo "</div>";
         echo "</div>";
     } else {
         echo "User not found.";
@@ -48,3 +55,15 @@ try {
     echo "Database error: " . $e->getMessage();
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Surveys</title>
+    <link rel="stylesheet" href="../resources/css/introPages.css"> 
+</head>
+<body>
+    <img src="https://s3-us-west-2.amazonaws.com/scorestream-team-profile-pictures/285522/20181011000648_310_mascot1280Near.png" alt="Logo" class="logo">
+</body>
+</html>
