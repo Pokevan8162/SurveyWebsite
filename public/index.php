@@ -35,7 +35,7 @@ try {
 
                 echo "<div class='survey-card'>";
                 echo "<h3 class='survey_title'>$surveyName</h3>";
-                echo "<form action='survey.php' method='post'>";
+                echo "<form action='survey_validation.php' method='post'>";
                 echo "<input type='hidden' name='survey_id' value='$surveyID'>";
                 echo "<button type='submit' class='btn'>Take Survey</button>";
                 echo "</form>";
