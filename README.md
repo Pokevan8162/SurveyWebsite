@@ -40,9 +40,9 @@ This is a web-based survey platform built with HTML, CSS, PHP, Java, and more. T
 
 1. Clone or download this repository.
 2. Set up a PHP server (e.g., XAMPP or MAMP).
-3. Import the SQL file in `database/schema.sql` to your local MySQL server.
-4. Ensure file paths in your HTML/PHP files align with this new structure.
-5. Run `index.html` to get started.
+3. Create a database 'survey_db' and run the SQL file in `database/schema.sql`.
+4. Ensure database configuration in backend/db.php matches your database credentials.
+5. Run `LogIn.php` in your local server to get started.
 
 ---
 
@@ -55,8 +55,8 @@ CSS, images, JS = client-side = use browser-relative URLs
 
 ## 🔒 Security Notes
 
-- Passwords are hashed using Java (`PasswordHash.java`) 
-- Input validation and sanitization (TBD?).
+- Passwords are hashed using Java (`PasswordHash.java` and `PasswordSalt.java`) 
+- Input validation and sanitization
 
 ---
 
