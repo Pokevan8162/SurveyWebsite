@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputPassword = trim($_POST['Password']);
 
     // Grab the salt from the database
-    $stmt = $pdo->prepare("SELECT Salt FROM USERS WHERE Email = :Email");
+    $stmt = $conn->prepare("SELECT Salt FROM USERS WHERE Email = :Email");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
     $stmt->execute();
     $saltRow = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,11 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $inputPassword . $salt;
 
     // Hash the password with the salt
-    $hashedPassword = shell_exec("java -cp " . __DIR__ . "/../java PasswordHash " . escapeshellarg($password));
+    $hashedPassword = shell_exec("java -cp \"" . __DIR__ . "/../java\" PasswordHash " . escapeshellarg($password));
     $hashedPassword = trim($hashedPassword); // Trim in case Java prints a new line at the end
 
     //fetch user data for comparing passwords
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE Email = :Email AND Password = :Password");
     $stmt->bindParam(':Email', $inputEmail, PDO::PARAM_STR);
     $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR); // verify password in database
     $stmt->execute();
