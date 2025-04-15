@@ -13,6 +13,7 @@ $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_SESSION['email']; // Using email as the user identifier
     $surveyId = $pdo->query("SELECT SurveyID FROM SURVEYS LIMIT 1")->fetchColumn();
+    $_SESSION['SurveyID'] = $surveyID;
     
     // Prepare statement
     $stmt = $pdo->prepare("INSERT INTO RESPONSES (Email, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
