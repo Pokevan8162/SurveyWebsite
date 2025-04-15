@@ -2,30 +2,37 @@
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
-// Debugging step:
-// $debug = $conn->query("SELECT QuestionNumber, Question FROM QUESTIONS ORDER BY QuestionNumber")->fetchAll();
-// echo "<pre>"; print_r($debug); echo "</pre>"; exit;
+// Ensure user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo "You must be logged in to take surveys.";
+    exit;
+}
 
-// Get all questions in proper order
-$stmt = $conn->query("SELECT * FROM QUESTIONS ORDER BY QuestionNumber ASC");
+$userID = $_SESSION['user_id'];
+$surveyID = $_GET['id'] ?? null;
+
+if (!$surveyID) {
+    echo "No survey selected.";
+    exit;
+}
+
+// Fetch only questions for this specific survey by ID
+$stmt = $pdo->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
+$stmt->execute([$surveyID]);
 $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_SESSION['email']; // Using email as the user identifier
-    $surveyId = $conn->query("SELECT SurveyID FROM SURVEYS LIMIT 1")->fetchColumn();
-    $_SESSION['SurveyID'] = $surveyID;
-    
-    // Prepare statement
-    $stmt = $conn->prepare("INSERT INTO RESPONSES (Email, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
-    
+    $stmt = $pdo->prepare("INSERT INTO RESPONSES (UserID, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
+
     foreach ($questions as $question) {
         $qNum = $question['QuestionNumber'];
         if (isset($_POST["question$qNum"])) {
-            $stmt->execute([$email, $surveyId, $qNum, $_POST["question$qNum"]]);
+            $stmt->execute([$userID, $surveyID, $qNum, $_POST["question$qNum"]]);
         }
     }
-    
-    header("Location: thank_you.php"); // Redirect after submission
+
+    header("Location: thank_you.php");
     exit;
 }
 ?>
@@ -65,27 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <script>
-        /*
-        const questionsPerPage = 10;
-        let currentPage = 1;
-
-        function showPage(page) {
-            const questions = document.querySelectorAll('.form_group');
-            questions.forEach((q, i) => {
-                q.style.display = (i >= (page-1)*questionsPerPage && i < page*questionsPerPage) 
-                    ? 'block' : 'none';
-            });
-        }
-        */
         function setAnswer(btn, qNum) {
-            // Remove selection from both buttons in this group
             const group = btn.parentNode;
             group.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-            
-            // Mark clicked button as selected
             btn.classList.add('selected');
-            
-            // Set the hidden input value
             document.getElementById(`input${qNum}`).value = btn.textContent;
         }
     </script>
