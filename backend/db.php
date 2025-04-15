@@ -6,7 +6,7 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES => false,
 ];
 try {
-    $pdo = new PDO($dsn, "root", "root", $options);
+    $conn = new PDO($dsn, "root", "root", $options);
 } catch (PDOException $e) {
     die("Database Connection Failed: " . $e->getMessage());
 }
