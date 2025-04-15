@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else { // Passed all errors, continue as normal.
 
     // Find out if email already exists. If not, execute insert into database.
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE Email = :Email");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE Email = :Email");
     $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
     $stmt->execute();
     if ($stmt->rowCount() > 0) { // if the email exists in the database,
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
     
         //insert into db
-        $stmt = $pdo->prepare("INSERT INTO users (Email, Password, Gender, Salt) VALUES (:Email, :Password, :Gender, :Salt)");
+        $stmt = $conn->prepare("INSERT INTO users (Email, Password, Gender, Salt) VALUES (:Email, :Password, :Gender, :Salt)");
         $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR);
         $stmt->bindParam(':Salt', $salt, PDO::PARAM_STR);
