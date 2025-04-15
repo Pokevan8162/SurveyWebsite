@@ -3,20 +3,20 @@ require_once __DIR__ . '/../backend/db.php';
 session_start();
 
 // Debugging step:
-// $debug = $pdo->query("SELECT QuestionNumber, Question FROM QUESTIONS ORDER BY QuestionNumber")->fetchAll();
+// $debug = $conn->query("SELECT QuestionNumber, Question FROM QUESTIONS ORDER BY QuestionNumber")->fetchAll();
 // echo "<pre>"; print_r($debug); echo "</pre>"; exit;
 
 // Get all questions in proper order
-$stmt = $pdo->query("SELECT * FROM QUESTIONS ORDER BY QuestionNumber ASC");
+$stmt = $conn->query("SELECT * FROM QUESTIONS ORDER BY QuestionNumber ASC");
 $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_SESSION['email']; // Using email as the user identifier
-    $surveyId = $pdo->query("SELECT SurveyID FROM SURVEYS LIMIT 1")->fetchColumn();
+    $surveyId = $conn->query("SELECT SurveyID FROM SURVEYS LIMIT 1")->fetchColumn();
     $_SESSION['SurveyID'] = $surveyID;
     
     // Prepare statement
-    $stmt = $pdo->prepare("INSERT INTO RESPONSES (Email, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO RESPONSES (Email, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
     
     foreach ($questions as $question) {
         $qNum = $question['QuestionNumber'];
