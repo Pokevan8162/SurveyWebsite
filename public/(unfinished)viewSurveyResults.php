@@ -24,7 +24,7 @@ if (!isset($_GET['survey_id'])) {
 $surveyID = (int) $_GET['survey_id'];
 
 // Fetch all questions
-$stmt = $pdo->prepare("SELECT QuestionNumber, Question FROM QUESTIONS WHERE SurveyID = ?");
+$stmt = $conn->prepare("SELECT QuestionNumber, Question FROM QUESTIONS WHERE SurveyID = ?");
 $stmt->execute([$surveyID]);
 $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -35,7 +35,7 @@ foreach ($questions as $question) {
     echo "<h3>Q{$qNum}: {$qText}</h3>";
 
     // Get count of each answer for this question
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         SELECT Answer, COUNT(*) as count 
         FROM RESPONSES 
         WHERE SurveyID = ? AND QuestionNumber = ? 
@@ -45,7 +45,7 @@ foreach ($questions as $question) {
     $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get total responses to calculate percentages
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM RESPONSES WHERE SurveyID = ? AND QuestionNumber = ?");
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM RESPONSES WHERE SurveyID = ? AND QuestionNumber = ?");
     $stmt->execute([$surveyID, $qNum]);
     $total = $stmt->fetchColumn();
 
