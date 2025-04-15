@@ -2,30 +2,16 @@
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "You must be logged in to take surveys.";
-    exit;
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["survey_id"])) {
-    $_SESSION["SurveyID"] = $_POST["survey_id"];
-}
-
-// Make sure SurveyID is set
-if (!isset($_SESSION['SurveyID'])) {
-    echo "No survey selected.";
-    exit;
-}
 $surveyID = $_SESSION['SurveyID'];
 $userID = $_SESSION['user_id'];
 
 $stmt = $conn->prepare("SELECT * FROM RESPONSES WHERE SurveyID = ? AND UserID = ?");
 $stmt->execute([$surveyID, $userID]);
-$questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$responses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (count($responses) > 0) {
-    echo "You have already taken this survey.";
+if (!empty($responses)) {
+    echo "<p>You have already taken this survey.</p>";
+    echo "<a href='index.php'>Back Home</a>";
     exit;
 }
 
