@@ -9,43 +9,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     $questions = $_POST["questions"] ?? [];
 
     try {
-        $pdo->beginTransaction();
+        $conn->beginTransaction();
 
         // Insert survey with title and gender
-        $stmt = $pdo->prepare("INSERT INTO SURVEYS(SurveyName, SurveyGender) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO SURVEYS(SurveyName, SurveyGender) VALUES (?, ?)");
         if ($survey_gender == "Neutral") {
             $genders = ["Female", "Male"];
             foreach ($genders as $gender) {
                 $stmt->execute([$survey_title, $gender]);
-                $surveyID = $pdo->lastInsertId();
+                $surveyID = $conn->lastInsertId();
 
                 foreach ($questions as $index => $question) {
                     $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
                     $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
 
-                    $stmtQ = $pdo->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
+                    $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
                                         VALUES(?, ?, ?, ?)");
                     $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
                 }
             }
         } else {
             $stmt->execute([$survey_title, $survey_gender]);
-            $surveyID = $pdo->lastInsertId();
+            $surveyID = $conn->lastInsertId();
 
             foreach ($questions as $index => $question) {
                 $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
                 $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
 
-                $stmtQ = $pdo->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
+                $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
                                     VALUES(?, ?, ?, ?)");
                 $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
             }
         }
 
 
-        $pdo->commit();
+        $conn->commit();
     } catch (Exception $e) {
-        $pdo->rollBack();
+        $conn->rollBack();
         die("Error: " . $e->getMessage());
     }
 }
