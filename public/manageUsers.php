@@ -1,6 +1,19 @@
 <?php
+    //session start
     session_start();
     require_once __DIR__ . '/../backend/db.php';
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+        // session check
+        if (!isset($_SESSION['user_id'])) {
+            echo "<a href=login.php>Please log in.</a>";
+            exit;
+        }
+    } catch (PDOException $e) {
+        echo 'Database error: ' . $e->getMessage();
+    }
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -77,7 +90,7 @@
             </div>
 
             <?php
-                $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='admin'");
+                $stmt = $conn->prepare("SELECT * FROM users WHERE UserStatus='Admin'");
                 $stmt->execute();
                 $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
