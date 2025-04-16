@@ -34,12 +34,15 @@ if (count($userIDs) > 0) {
     $response = $stmt->fetchAll();
 
     if (count($response) > 0) {
-        echo "<h2>Reflect on This Anonymous Survey:</h2>";
         $_SESSION['reflectedUserID'] = $randomID;
 
+        echo "<div class='container'>";
+        echo "<h2>Reflect on This Anonymous Survey:</h2>";
         foreach ($response as $row) {
+            echo "<div class='question-block'>";
             echo "<strong>Q{$row['QuestionNumber']}:</strong> {$row['Question']}<br>";
-            echo "<em>Answer:</em> {$row['Answer']}<br><br>";
+            echo "<em>Answer:</em> {$row['Answer']}<br>";
+            echo "</div>";
         }
 
         // Reflection form
@@ -54,13 +57,22 @@ if (count($userIDs) > 0) {
 
             <button type="submit">Submit Reflection</button>
         </form>
+        </div>
 HTML;
     } else {
-        echo "Response empty.";
+        echo "<p>Response empty.</p>";
         echo "<a href='index.php'>Back Home</a>";
     }
 } else {
-    echo "No other responses available to reflect on for this survey.";
+    echo "<p>No other responses available to reflect on for this survey.</p>";
     echo "<a href='index.php'>Back Home</a>";
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Surveys</title>
+    <link rel="stylesheet" href="../resources/css/anonymousSurvey.css"> 
+</head>
