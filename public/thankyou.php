@@ -18,3 +18,10 @@
     echo "<p>Thanks!</p>";
     echo "<a href='index.php'>Back Home</a>";
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Surveys</title>
+    <link rel="stylesheet" href="../resources/css/introPages.css"> 
+</head>
