@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: LogIn.php');
+    exit;
+}
+
 $surveyID = $_SESSION['SurveyID'];
 $userID = $_SESSION['user_id'];
 
@@ -22,12 +27,23 @@ $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    echo "<pre>";
+    print_r($_POST);
+    echo "</pre>";
+
     $stmt = $conn->prepare("INSERT INTO RESPONSES (UserID, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
 
     foreach ($questions as $question) {
         $qNum = $question['QuestionNumber'];
+        $answer = $_POST["question$qNum"] ?? 'NULL';
+    
         if (isset($_POST["question$qNum"])) {
-            $stmt->execute([$userID, $surveyID, $qNum, $_POST["question$qNum"]]);
+            try {
+                $stmt->execute([$userID, $surveyID, $qNum, $answer]);
+            } catch (PDOException $e) {
+                echo "DB Error: " . $e->getMessage();
+                exit;
+            }
         }
     }
 
@@ -56,18 +72,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="title">Please select Yes or No for each question. This survey is anonymous. Your honesty is vital for this process to be meaningful. </div>
         <h1>Please answer all questions</h1>
         <form method="POST">
-            <?php foreach ($questions as $question): ?>
-                <div class="form_group">
-                    <p><?php echo $question['QuestionNumber']. '. ' . htmlspecialchars($question['Question']); ?></p>
-                    <div class="btn-group">
-                        <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">Yes</button>
-                        <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">No</button>
-                        <input type="hidden" name="question<?php echo $question['QuestionNumber']; ?>" id="input<?php echo $question['QuestionNumber']; ?>">
-                    </div>
+    <?php foreach ($questions as $question): ?>
+        <div class="form_group">
+            <p><?php echo $question['QuestionNumber']. '. ' . htmlspecialchars($question['Question']); ?></p>
+
+            <?php if ($question['QuestionType'] == 'Yes/No'): ?>
+                <div class="btn-group">
+                    <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">Yes</button>
+                    <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">No</button>
+                    <input type="hidden" name="question<?php echo $question['QuestionNumber']; ?>" id="input<?php echo $question['QuestionNumber']; ?>" required>
                 </div>
-            <?php endforeach; ?>
-            <button type="submit">Submit Survey</button>
-        </form>
+
+            <?php elseif ($question['QuestionType'] == 'Short Answer'): ?>
+                <div class="text-group">
+                    <input 
+                        type="text" 
+                        name="question<?php echo $question['QuestionNumber']; ?>" 
+                        id="input<?php echo $question['QuestionNumber']; ?>" 
+                        required>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endforeach; ?>
+
+    <button type="submit">Submit Survey</button>
+</form>
+
     </div>
 
     <script>
