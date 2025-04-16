@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Survey</title>
-    <link rel="stylesheet" href="usersCSS.css">
+    <link rel="stylesheet" href="../resources/css/createSurvey.css">
     <script>
         function addQuestion() {
             let container = document.getElementById("questionsContainer");
@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 <body>
     <a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
     <div class="header">
+        <a href="index.php" class="logout"><button type="button" class="btn">Home</button></a>
         <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
     </div>
     <div class="container">
