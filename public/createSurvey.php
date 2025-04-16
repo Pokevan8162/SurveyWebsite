@@ -1,6 +1,19 @@
 <?php
-require_once __DIR__ . '/../backend/db.php';
+//session start
 session_start();
+require_once __DIR__ . '/../backend/db.php';
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // session check
+    if (!isset($_SESSION['user_id'])) {
+        echo "<a href=login.php>Please log in.</a>";
+        exit;
+    }
+} catch (PDOException $e) {
+    echo 'Database error: ' . $e->getMessage();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 
@@ -9,8 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     $questions = $_POST["questions"] ?? [];
 
     try {
-        $conn->beginTransaction();
-
         // Insert survey with title and gender
         $stmt = $conn->prepare("INSERT INTO SURVEYS(SurveyName, SurveyGender) VALUES (?, ?)");
         if ($survey_gender == "Neutral") {
@@ -23,8 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
                     $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
                     $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
 
-                    $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
-                                        VALUES(?, ?, ?, ?)");
+                    $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question) VALUES(?, ?, ?, ?)");
                     $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
                 }
             }
@@ -36,16 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
                 $question_text = htmlspecialchars($question["text"], ENT_QUOTES, 'UTF-8');
                 $question_type = htmlspecialchars($question["type"], ENT_QUOTES, 'UTF-8');
 
-                $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question)
-                                    VALUES(?, ?, ?, ?)");
+                $stmtQ = $conn->prepare("INSERT INTO QUESTIONS(SurveyID, QuestionNumber, QuestionType, Question) VALUES(?, ?, ?, ?)");
                 $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
             }
         }
-
-
-        $conn->commit();
     } catch (Exception $e) {
-        $conn->rollBack();
         die("Error: " . $e->getMessage());
     }
 }
@@ -55,7 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Survey</title>
+    <link rel="stylesheet" href="usersCSS.css">
     <script>
         function addQuestion() {
             let container = document.getElementById("questionsContainer");
@@ -65,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
             div.className = "question";
             div.innerHTML = `
                 <label>Question:</label>
-                <input type="text" name="questions[${index}][text]" required>
+                <input type="text" name="questions[${index}][text]" size="70" required>
                 <label>Type:</label>
                 <select name="questions[${index}][type]">
                     <option value="Yes/No">Yes/No</option>
@@ -80,14 +87,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
         function removeQuestion(button) {
             button.parentElement.remove();
         }
-
-        // Add one default question on page load
-        window.onload = function () {
-            addQuestion();
-        };
     </script>
 </head>
 <body>
+    <a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
+    <div class="header">
+        <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
+    </div>
+    <div class="container">
     <h2>Create a Survey</h2>
     <form method="post">
         <label>Survey Title:</label>
@@ -108,5 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
         <br><br>
         <button type="submit" name="finalize_survey">Create Survey</button>
     </form>
+    </div>
 </body>
 </html>
