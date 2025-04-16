@@ -17,7 +17,9 @@ if (count($userIDs) > 0) {
     // Get a random response from a different user for the same SurveyID
     $stmt = $conn->prepare("
         SELECT * FROM Responses r
-        JOIN QUESTIONS q ON r.SurveyID = q.SurveyID
+        JOIN QUESTIONS q 
+        ON r.SurveyID = q.SurveyID 
+        AND r.QuestionNumber = q.QuestionNumber
         WHERE r.SurveyID = :surveyID AND r.UserID = :userID
     ");
 
@@ -35,14 +37,9 @@ if (count($userIDs) > 0) {
         echo "<h2>Reflect on This Anonymous Survey:</h2>";
         $_SESSION['reflectedUserID'] = $randomID;
 
-        $size = count($response);
-        $count = 0;
         foreach ($response as $row) {
-            if ($count < ($size/2)) { // for some reason response grabs the same questions twice so just half it
-                echo "<strong>Q{$row['QuestionNumber']}:</strong> {$row['Question']}<br>";
-                echo "<em>Answer:</em> {$row['Answer']}<br><br>";
-                $count++;
-            }
+            echo "<strong>Q{$row['QuestionNumber']}:</strong> {$row['Question']}<br>";
+            echo "<em>Answer:</em> {$row['Answer']}<br><br>";
         }
 
         // Reflection form
