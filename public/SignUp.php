@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = htmlspecialchars(trim($_POST['email']));
     $gender = $_POST['gender'];
     $inputPassword = $_POST['password'];
+    $userStatus = "User";
 
     if (empty($email) || empty($inputPassword) || empty($gender)) {
     $error_message = "All fields are required!";
@@ -33,11 +34,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $hashedPassword = trim($hashedPassword); // trim in case java adds an extra line to the end
     
         //insert into db
-        $stmt = $conn->prepare("INSERT INTO users (Email, Password, Gender, Salt) VALUES (:Email, :Password, :Gender, :Salt)");
+        $stmt = $conn->prepare("INSERT INTO users (Email, Password, Gender, UserStatus, Salt) VALUES (:Email, :Password, :Gender, :UserStatus, :Salt)");
         $stmt->bindParam(':Email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':Password', $hashedPassword, PDO::PARAM_STR);
         $stmt->bindParam(':Salt', $salt, PDO::PARAM_STR);
         $stmt->bindParam(':Gender', $gender, PDO::PARAM_STR);
+        $stmt->bindParam(':UserStatus', $userStatus, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
             header("Location: login.php");  //redirect to login page now to sign in
