@@ -1,9 +1,3 @@
-<!-- This is the homepage for the admin 
- From here the admin should be able to 
- manage users (update usernames, passwords, etc.), 
- manage surveys (update questions, see results, and post new questions, create new surveys).
--->
-
 <?php
 //start session
 session_start();
@@ -16,7 +10,7 @@ try {
     // session check
     if (!isset($_SESSION['user_id'])) {
         echo "<a href=login.php>Please log in.</a>";
-        exit;
+    	exit;
     }
 } catch (PDOException $e) {
     echo 'Database error: ' . $e->getMessage();
@@ -31,7 +25,7 @@ try {
 	<link rel="stylesheet" href="introPages.css">
 </head>
 <body>	
-	<img src="https://s3-us-west-2.amazonaws.com/scorestream-team-profile-pictures/285522/20181011000648_310_mascot1280Near.png" alt="Logo" class="logo">
+	<a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
 	<div class="container">
 		<div class="form_area">
 		<div class="title">Welcome to the Administrator Page</div>
