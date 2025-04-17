@@ -21,7 +21,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users</title>
+    <title>View Surveys</title>
     <link rel="stylesheet" href="../resources/css/usersCSS.css">
 </head>
 <body>
