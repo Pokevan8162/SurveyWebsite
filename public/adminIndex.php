@@ -19,7 +19,7 @@ try {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Administrator Home Page</title>
-	<link rel="stylesheet" href="introPages.css">
+	<link rel="stylesheet" href="../resources/css/introPages.css">
 </head>
 <body>	
 	<a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
