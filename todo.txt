@@ -1,2 +1,4 @@
 - prevent empty survey creations
 - prevent users from submitting empty surveys
+- finish viewSurveyResults.php
+- validate viewSurveys.php
