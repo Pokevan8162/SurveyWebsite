@@ -2,11 +2,6 @@
     require_once __DIR__ . '/../backend/db.php';
     require_once __DIR__ . '/../backend/session_check.php';
 
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: LogIn.php');
-        exit;
-    }
-
     $surveyID = $_SESSION['SurveyID'];
     $userID = $_SESSION['user_id'];
 
