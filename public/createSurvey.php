@@ -20,6 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     $survey_title = htmlspecialchars($_POST["survey_title"] ?? "Unnamed Survey", ENT_QUOTES, 'UTF-8');
     $survey_gender = htmlspecialchars($_POST["survey_gender"] ?? "Neutral", ENT_QUOTES, 'UTF-8');
     $questions = $_POST["questions"] ?? [];
+    if (count($questions) == 0) {
+        echo "<div class='message'>Cannot submit empty survey!</div>";
+        exit;
+    }
 
     try {
         // Insert survey with title and gender
@@ -62,6 +66,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Survey</title>
+    <style>
+        .message {
+            font-size: 18px;
+            color: #F44336; /* Red color */
+            margin-bottom: 20px;
+        }
+    </style>
     <link rel="stylesheet" href="../resources/css/createSurvey.css">
     <script>
         function addQuestion() {
