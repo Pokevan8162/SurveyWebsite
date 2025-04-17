@@ -44,8 +44,7 @@
             }
         }
 
-        $_SESSION['message'] = "Thank you for taking the survey!";
-        header('Location: displayMessage.php');
+        header('Location: showAnonymousSurvey.php');
         exit;
     }
 ?>
