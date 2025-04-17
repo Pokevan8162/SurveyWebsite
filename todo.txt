@@ -1,1 +1,2 @@
-- create and manage csrf tokens
+- prevent empty survey creations
+- prevent users from submitting empty surveys
