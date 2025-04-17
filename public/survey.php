@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../backend/db.php';
-session_start();
+require_once __DIR__ . '/../backend/session_check.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: LogIn.php');
@@ -27,9 +27,6 @@ $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
 
     $stmt = $conn->prepare("INSERT INTO RESPONSES (UserID, SurveyID, QuestionNumber, Answer) VALUES (?, ?, ?, ?)");
 
@@ -74,6 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <form method="POST">
     <?php foreach ($questions as $question): ?>
         <div class="form_group">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <p><?php echo $question['QuestionNumber']. '. ' . htmlspecialchars($question['Question']); ?></p>
 
             <?php if ($question['QuestionType'] == 'Yes/No'): ?>
