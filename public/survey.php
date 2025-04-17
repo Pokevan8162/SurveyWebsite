@@ -80,13 +80,6 @@
     </style>
 </head>
 <body>
-<div style="text-align: right; padding: 10px 20px;">
-    <form action="logout.php" method="post" style="display: inline;">
-        <button type="submit" style="padding: 8px 15px; background-color: #f44336; color: white; border: none; cursor: pointer; border-radius: 5px;">
-            Logout
-        </button>
-    </form>
-</div>
 
 <div id="toast" class="toast"></div>
 
@@ -125,6 +118,14 @@
         <?php endforeach; ?>
 
         <button type="submit">Submit Survey</button>
+    </form>
+</div>
+
+<div style="text-align: right; padding: 10px 20px;">
+    <form action="logout.php" method="post" style="display: inline;">
+        <button type="submit" style="padding: 8px 15px; background-color: #f44336; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Logout
+        </button>
     </form>
 </div>
 
