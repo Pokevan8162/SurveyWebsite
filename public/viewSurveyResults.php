@@ -25,27 +25,37 @@
     <div class="header">
         <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
     </div>
-    <div class="user">
-        <input type="text" value="number" size="10" readonly>
-        <input type="text" value="Yes" size="10" readonly>
-        <input type="text" value="No" size="10" readonly>
-    </div>
     <div class="container">
     <?php
+        echo "<div class='user'>";
+        echo "<input type='text' value='number' size='10' readonly>";
+        echo "<input type='text' value='Yes' size='10' readonly>";
+        echo "<input type='text' value='No' size='10' readonly>";
+        echo "</div>";
+
         $surveyID = $_GET['SurveyID'];
-        $stmt = $conn->prepare("SELECT QuestionNumber FROM responses WHERE SurveyID = $surveyID");
-        $stmt->execute();
+        $stmt = $conn->prepare("SELECT DISTINCT QuestionNumber FROM responses WHERE SurveyID = :surveyID");
+        $stmt->execute([':surveyID' => $surveyID]);
         $numbers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($numbers as $qnum) {
-            $stmtY = $conn->prepare("SELECT COUNT(*) as YesCount FROM responses WHERE SurveyID = $surveyID AND QuestionNumber = $qnum AND Answer='Yes'");
-            $stmtY->execute();
-            $ycount = $stmtY->fetch(PDO::FETCH_ASSOC);
-            $stmtN = $conn->prepare("SELECT COUNT(*) as NCount FROM responses WHERE SurveyID = $surveyID AND QuestionNumber = $qnum AND Answer='No'");
-            $stmtN->execute();
-            $ncount = $stmtN->fetch(PDO::FETCH_ASSOC);
-            echo "<input type='text' name='qnum' value='$qnum' readonly>";
-            echo "<input type='text' name='yes' value='$ycount' readonly>";
-            echo "<input type='text' name='no' value='$ncount' readonly>";
+        foreach ($numbers as $row) {
+            $qnum = $row['QuestionNumber'];
+        
+            // Count YES responses
+            $stmtY = $conn->prepare("SELECT COUNT(*) as YesCount FROM responses WHERE SurveyID = :surveyID AND QuestionNumber = :qnum AND Answer = 'Yes'");
+            $stmtY->execute([':surveyID' => $surveyID, ':qnum' => $qnum]);
+            $ycount = $stmtY->fetch(PDO::FETCH_ASSOC)['YesCount'];
+        
+            // Count NO responses
+            $stmtN = $conn->prepare("SELECT COUNT(*) as NCount FROM responses WHERE SurveyID = :surveyID AND QuestionNumber = :qnum AND Answer = 'No'");
+            $stmtN->execute([':surveyID' => $surveyID, ':qnum' => $qnum]);
+            $ncount = $stmtN->fetch(PDO::FETCH_ASSOC)['NCount'];
+        
+            // Output the results
+            echo "<div class='user'>";
+            echo "<input type='text' name='qnum[]' value='$qnum' size='10' readonly> ";
+            echo "<input type='text' name='yes[]' value='$ycount' size='10' readonly> ";
+            echo "<input type='text' name='no[]' value='$ncount' size='10' readonly>";
+            echo "</div>";
         }
     ?>
     </div>
