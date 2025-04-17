@@ -1,60 +1,53 @@
-/* Access via viewSurveyResults.php?survey_id=123, possibly save the survey ID as a session variable in the page before it
-Takes in a survey ID and displays results as a data stream with percentages
-Results table:
-CREATE TABLE RESPONSES (
-    Email VARCHAR(50),
-    SurveyID INT,
-    QuestionNumber INT,
-    Answer VARCHAR(250),
-    PRIMARY KEY (Email, SurveyID, QuestionNumber),
-    FOREIGN KEY (Email) REFERENCES USERS(Email) ON DELETE CASCADE,
-    FOREIGN KEY (SurveyID) REFERENCES SURVEYS(SurveyID) ON DELETE CASCADE,
-    FOREIGN KEY (SurveyID, QuestionNumber) REFERENCES QUESTIONS(SurveyID, QuestionNumber) ON DELETE CASCADE
-);
-Use JavaScript + AJAX for live updates (e.g., chart.js or simple polling).
-*/
-
 <?php
-require_once __DIR__ . '/../backend/db.php';
-
-if (!isset($_GET['survey_id'])) {
-    die("Survey ID not specified.");
-}
-
-$surveyID = (int) $_GET['survey_id'];
-
-// Fetch all questions
-$stmt = $conn->prepare("SELECT QuestionNumber, Question FROM QUESTIONS WHERE SurveyID = ?");
-$stmt->execute([$surveyID]);
-$questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($questions as $question) {
-    $qNum = $question['QuestionNumber'];
-    $qText = htmlspecialchars($question['Question']);
-
-    echo "<h3>Q{$qNum}: {$qText}</h3>";
-
-    // Get count of each answer for this question
-    $stmt = $conn->prepare("
-        SELECT Answer, COUNT(*) as count 
-        FROM RESPONSES 
-        WHERE SurveyID = ? AND QuestionNumber = ? 
-        GROUP BY Answer
-    ");
-    $stmt->execute([$surveyID, $qNum]);
-    $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Get total responses to calculate percentages
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM RESPONSES WHERE SurveyID = ? AND QuestionNumber = ?");
-    $stmt->execute([$surveyID, $qNum]);
-    $total = $stmt->fetchColumn();
-
-    echo "<ul>";
-    foreach ($answers as $answer) {
-        $percent = $total > 0 ? round(($answer['count'] / $total) * 100, 2) : 0;
-        $ans = htmlspecialchars($answer['Answer']);
-        echo "<li>{$ans}: {$percent}% ({$answer['count']} votes)</li>";
+    //session start
+    session_start();
+    require_once __DIR__ . '/../backend/db.php';
+    try {
+        // session check
+        if (!isset($_SESSION['user_id'])) {
+            echo "<a href=login.php>Please log in.</a>";
+            exit;
+        }
+    } catch (PDOException $e) {
+        echo 'Database error: ' . $e->getMessage();
     }
-    echo "</ul>";
-}
 ?>
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="usersCSS.css">
+</head>
+<body>
+    <a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
+    <div class="header">
+        <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
+    </div>
+    <div class="user">
+        <input type="text" value="number" size="10" readonly>
+        <input type="text" value="Yes" size="10" readonly>
+        <input type="text" value="No" size="10" readonly>
+    </div>
+    <div class="container">
+    <?php
+        $surveyID = $_GET['SurveyID'];
+        $stmt = $conn->prepare("SELECT QuestionNumber FROM responses WHERE SurveyID = $surveyID");
+        $stmt->execute();
+        $numbers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($numbers as $qnum) {
+            $stmtY = $conn->prepare("SELECT COUNT(*) as YesCount FROM responses WHERE SurveyID = $surveyID AND QuestionNumber = $qnum AND Answer='Yes'");
+            $stmtY->execute();
+            $ycount = $stmtY->fetch(PDO::FETCH_ASSOC);
+            $stmtN = $conn->prepare("SELECT COUNT(*) as NCount FROM responses WHERE SurveyID = $surveyID AND QuestionNumber = $qnum AND Answer='No'");
+            $stmtN->execute();
+            $ncount = $stmtN->fetch(PDO::FETCH_ASSOC);
+            echo "<input type='text' name='qnum' value='$qnum' readonly>";
+            echo "<input type='text' name='yes' value='$ycount' readonly>";
+            echo "<input type='text' name='no' value='$ncount' readonly>";
+        }
+    ?>
+    </div>
+</body>
+</html>
