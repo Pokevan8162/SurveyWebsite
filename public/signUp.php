@@ -2,6 +2,12 @@
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
+// Generate CSRF token if not already set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a secure token
+}
+
+
 // Initialize error message
 $error_message = "";
 
@@ -72,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
 
             <form action="" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <div class="form_group">
                     <input type="email" name="email" class="form_style" placeholder="Email" required>
                 </div>
