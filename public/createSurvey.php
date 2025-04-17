@@ -1,19 +1,9 @@
 <?php
-//session start
-session_start();
 require_once __DIR__ . '/../backend/db.php';
-try {
-    $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+session_start();
 
-    // session check
-    if (!isset($_SESSION['user_id'])) {
-        echo "<a href=login.php>Please log in.</a>";
-        exit;
-    }
-} catch (PDOException $e) {
-    echo 'Database error: ' . $e->getMessage();
-}
+$errorMessage = "";
+$successMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
 
@@ -21,9 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
     $survey_gender = htmlspecialchars($_POST["survey_gender"] ?? "Neutral", ENT_QUOTES, 'UTF-8');
     $questions = $_POST["questions"] ?? [];
     if (count($questions) == 0) {
-        echo "<div class='message'>Cannot submit empty survey!</div>";
-        exit;
-    }
+        $errorMessage = "Cannot submit an empty survey!";
+    } else {
 
     try {
         // Insert survey with title and gender
@@ -54,9 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
                 $stmtQ->execute([$surveyID, $index + 1, $question_type, $question_text]);
             }
         }
+        $successMessage = "Survey submitted successfully.";
     } catch (Exception $e) {
         die("Error: " . $e->getMessage());
     }
+}
 }
 ?>
 
@@ -127,6 +118,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["finalize_survey"])) {
         <br><br>
         <button type="submit" name="finalize_survey">Create Survey</button>
     </form>
+    <?php if (!empty($errorMessage)): ?>
+        <div class="message"><?php echo $errorMessage; ?></div>
+    <?php endif; ?>
+    <?php if (!empty($successMessage)): ?>
+        <div class="message"><?php echo $errorMessage; ?></div>
+    <?php endif; ?>
+
     </div>
 </body>
 </html>
