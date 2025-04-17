@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/../backend/session_check.php';
 
 try {
     // session check
@@ -36,6 +36,7 @@ try {
                 echo "<div class='survey-card'>";
                 echo "<h3 class='survey_title'>$surveyName</h3>";
                 echo "<form action='survey_validation.php' method='post'>";
+                echo "<input type='hidden' name='csrf_token' value='" . $_SESSION['csrf_token'] . "'>";
                 echo "<input type='hidden' name='survey_id' value='$surveyID'>";
                 echo "<button type='submit' class='btn'>Take Survey</button>";
                 echo "</form>";
