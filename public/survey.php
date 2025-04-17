@@ -56,49 +56,99 @@
         .btn-group { display: flex; gap: 10px; }
         .btn { padding: 8px 15px; cursor: pointer; }
         .selected { background-color: #4CAF50; color: white; }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            font-weight: bold;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Please select Yes or No for each question. This survey is anonymous. Your honesty is vital for this process to be meaningful. </div>
-        <h1>Please answer all questions</h1>
-        <form method="POST">
-    <?php foreach ($questions as $question): ?>
-        <div class="form_group">
+<div id="toast" class="toast"></div>
+
+<div class="container">
+    <div class="title">Please select Yes or No for each question. This survey is anonymous. Your honesty is vital for this process to be meaningful.</div>
+    <h1>Please answer all questions</h1>
+    <form method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <p><?php echo $question['QuestionNumber']. '. ' . htmlspecialchars($question['Question']); ?></p>
 
-            <?php if ($question['QuestionType'] == 'Yes/No'): ?>
-                <div class="btn-group">
-                    <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">Yes</button>
-                    <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">No</button>
-                    <input type="hidden" name="question<?php echo $question['QuestionNumber']; ?>" id="input<?php echo $question['QuestionNumber']; ?>" required>
-                </div>
+        <?php foreach ($questions as $question): ?>
+            <div class="form_group">
+                <p><?php echo $question['QuestionNumber']. '. ' . htmlspecialchars($question['Question']); ?></p>
 
-            <?php elseif ($question['QuestionType'] == 'Short Answer'): ?>
-                <div class="text-group">
-                    <input 
-                        type="text" 
-                        name="question<?php echo $question['QuestionNumber']; ?>" 
-                        id="input<?php echo $question['QuestionNumber']; ?>" 
-                        required>
-                </div>
-            <?php endif; ?>
-        </div>
-    <?php endforeach; ?>
+                <?php if ($question['QuestionType'] == 'Yes/No'): ?>
+                    <div class="btn-group">
+                        <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">Yes</button>
+                        <button type="button" class="btn" onclick="setAnswer(this, <?php echo $question['QuestionNumber']; ?>)">No</button>
+                        <input type="hidden" 
+                            class="yn-input" 
+                            data-qnum="<?php echo $question['QuestionNumber']; ?>" 
+                            name="question<?php echo $question['QuestionNumber']; ?>" 
+                            id="input<?php echo $question['QuestionNumber']; ?>" 
+                            required>
+                    </div>
 
-    <button type="submit">Submit Survey</button>
-</form>
+                <?php elseif ($question['QuestionType'] == 'Short Answer'): ?>
+                    <div class="text-group">
+                        <input 
+                            type="text" 
+                            name="question<?php echo $question['QuestionNumber']; ?>" 
+                            id="input<?php echo $question['QuestionNumber']; ?>" 
+                            required>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
 
-    </div>
+        <button type="submit">Submit Survey</button>
+    </form>
+</div>
 
-    <script>
-        function setAnswer(btn, qNum) {
-            const group = btn.parentNode;
-            group.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            document.getElementById(`input${qNum}`).value = btn.textContent;
+<script>
+    function setAnswer(btn, qNum) {
+        const group = btn.parentNode;
+        group.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById(`input${qNum}`).value = btn.textContent;
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000); // Hide after 3 seconds
+    }
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const ynInputs = document.querySelectorAll('.yn-input');
+        for (const input of ynInputs) {
+            if (!input.value) {
+                const qNum = input.dataset.qnum;
+                showToast(`Please answer question ${qNum}.`);
+                e.preventDefault();
+                return;
+            }
         }
-    </script>
+    });
+</script>
 </body>
 </html>
