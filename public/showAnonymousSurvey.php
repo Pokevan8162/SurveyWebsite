@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/../backend/session_check.php';
 
 // Get current userID and last completed SurveyID
 $userID = $_SESSION['user_id'];
@@ -46,9 +46,11 @@ if (count($userIDs) > 0) {
         }
 
         // Reflection form
-        echo <<<HTML
+        // Reflection form
+        ?>
         <form action="thankyou.php" method="post">
-            <input type="hidden" name="survey_id" value="{$surveyID}">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <input type="hidden" name="survey_id" value="<?php echo $surveyID; ?>">
             <label>How did this person's survey make you feel?</label><br>
             <textarea name="feeling" rows="4" cols="50" required></textarea><br><br>
 
@@ -58,7 +60,7 @@ if (count($userIDs) > 0) {
             <button type="submit">Submit Reflection</button>
         </form>
         </div>
-HTML;
+        <?php
     } else {
         echo "<p>Response empty.</p>";
         echo "<a href='index.php'>Back Home</a>";
@@ -73,6 +75,6 @@ HTML;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Available Surveys</title>
+    <title>Review an Anonymous Survey</title>
     <link rel="stylesheet" href="../resources/css/anonymousSurvey.css"> 
 </head>
