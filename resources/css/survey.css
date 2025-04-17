@@ -4,161 +4,95 @@ body {
     color: black;
     display: flex;
     justify-content: center;
-    /* Remove height: 100vh and add min-height and padding */
+    align-items: center;
     min-height: 100vh;
-    padding: 20px 0;
     margin: 0;
-    position: relative;
-}
-
-.logo {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 200px;
+    padding: 20px;
 }
 
 .container {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    text-align: center;
-    width: 90%;
-    /* Add max-width if needed */
+    align-items: center;
     max-width: 800px;
-}
-
-.form_area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     background-color: #f0f0f0d0;
-    padding: 30px;
     border: 2px solid #a7192f;
     border-radius: 20px;
+    padding: 30px;
     box-shadow: 3px 4px 0px 1px #a7192f;
     width: 100%;
-    /* Remove any fixed height and add margin */
-    margin: 20px 0;
 }
 
-/* Add a scrollable container for the questions */
-.questions-container {
-    width: 100%;
-    max-height: 70vh; /* Adjust as needed */
-    overflow-y: auto;
-    padding-right: 10px; /* Prevent scrollbar overlap */
-    margin-bottom: 20px;
-}
-
-/* Scrollbar styling */
-.questions-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.questions-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.questions-container::-webkit-scrollbar-thumb {
-    background: #a7192f;
-    border-radius: 10px;
-}
-
-.questions-container::-webkit-scrollbar-thumb:hover {
-    background: #8a1426;
-}
-
-.title {
-    color: black;
-    font-weight: 900;
-    font-size: 1.5em;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-/* Rest of your existing CSS remains the same */
-.form_group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 15px 0;
-    width: 100%;
-}
-
-.form_style {
-    outline: none;
-    border: 2px solid #a7192f;
-    box-shadow: 3px 4px 0px 1px #a7192f;
-    width: 290px;
-    padding: 12px 10px;
-    border-radius: 4px;
-    font-size: 15px;
-    background-color: white;
-    color: black;
-}
-
-.form_style:focus, .btn:focus {
-    transform: translateY(4px);
-    box-shadow: 1px 2px 0px 0px #a7192f;
-}
-
-.btn {
-    padding: 10px 20px;
-    margin: 5px;
-    width: 150px;
-    font-size: 14px;
-    background: white;
-    border: #a7192f;
+h2 {
     color: #a7192f;
-    border-radius: 10px;
-    font-weight: 800;
-    border: none;
-    box-shadow: 3px 3px 0px 0px #a7192f;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
-
-.btn-group {
-    display: flex;
-    justify-content: center;
-}
-
-.btn.selected {
-    background: #a7192f;
-    color: white;
-}
-
-.submit_btn {
-    padding: 15px;
-    margin: 25px 0px;
-    width: 290px;
-    font-size: 15px;
-    background: #a7192f;
-    color: white;
-    border-radius: 10px;
-    font-weight: 800;
-    border: none;
-    box-shadow: 3px 3px 0px 0px #a7192f;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.submit_btn:hover {
-    opacity: 0.9;
-}
-
-label {
-    font-size: 18px;
-    color: black;
-    margin-bottom: 10px;
+    font-size: 1.8em;
+    margin-bottom: 20px;
     text-align: center;
-    max-width: 600px;
+}
+
+.question-block {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffffcc;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+    width: 100%;
+}
+
+.question-block strong {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.question-block em {
+    color: #333;
+}
+
+form {
+    margin-top: 30px;
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    border: 2px solid #a7192f;
+    border-radius: 8px;
+    box-shadow: 2px 2px 0px 0px #a7192f;
+    font-size: 1em;
+    margin-bottom: 20px;
+    resize: vertical;
+}
+
+button[type="submit"] {
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    background: #a7192f;
+    color: white;
+    border-radius: 10px;
+    font-weight: 800;
+    border: none;
+    box-shadow: 3px 3px 0px 0px #a7192f;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #a7192f;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
 }
