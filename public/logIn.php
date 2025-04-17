@@ -2,11 +2,17 @@
 require_once __DIR__ . '/../backend/db.php';
 session_start();
 
+// Generate CSRF token if not already set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generate a secure token
+}
+
 // Initialize error message
 $error_message = "";
 
 //if form is submitted with submit button
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    session_regenerate_id(true);
     $inputEmail = htmlspecialchars(trim($_POST['Email']));
     $inputPassword = trim($_POST['Password']);
 
@@ -41,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['user_id'] = $user['UserID'];
         $_SESSION['Email'] = $user['Email'];
         $_SESSION['UserStatus'] = $user['UserStatus'];
+        $_SESSION['LAST_ACTIVITY'] = time(); // Set the current time for session limits
 
         if ($user['UserStatus'] === 'Admin') {
             //redirect to admin dashboard if user is an Admin
@@ -68,6 +75,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <img src="https://s3-us-west-2.amazonaws.com/scorestream-team-profile-pictures/285522/20181011000648_310_mascot1280Near.png" alt="Logo" class="logo">   <!--https://media0.giphy.com/media/UWVbIdzSqRVCvJnxFS/source.gif -->
     <div class="container">
+    <?php if (isset($_GET['timeout']) && $_GET['timeout'] == 1): ?>
+    <p style="color: red;">You have been logged out due to inactivity.</p>
+    <?php endif; ?>
         <div class="form_area">
             <div class="title">Log In</div>
             <div class="sub_title">Email and Password</div>
@@ -77,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
 
             <form action="" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <div class="form_group">
                     <input type="email" name="Email" class="form_style" placeholder="Email" required>
                 </div>
@@ -86,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <button type="submit" class="btn">Log In</button>
             </form>
 
-            <a href="signUp.php" class="link">No account? Sign up</a>
+            <a href="SignUp.php" class="link">No account? Sign up</a>
         </div>
     </div>
 </body>
