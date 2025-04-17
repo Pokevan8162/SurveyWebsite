@@ -62,12 +62,12 @@ if (count($userIDs) > 0) {
         </div>
         <?php
     } else {
-        echo "<p>Response empty.</p>";
-        echo "<a href='index.php'>Back Home</a>";
+        $_SESSION['message'] = "Response empty.";
+        header('Location: displayMessage.php');
     }
 } else {
-    echo "<p>No other responses available to reflect on for this survey.</p>";
-    echo "<a href='index.php'>Back Home</a>";
+    $_SESSION['message'] = "No other responses available to reflect on for this survey.";
+    header('Location: displayMessage.php');
 }
 ?>
 
