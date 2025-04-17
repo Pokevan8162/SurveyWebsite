@@ -65,6 +65,13 @@ try {
     <link rel="stylesheet" href="../resources/css/introPages.css"> 
 </head>
 <body>
+<div style="text-align: right; padding: 10px 20px;">
+    <form action="logout.php" method="post" style="display: inline;">
+        <button type="submit" style="padding: 8px 15px; background-color: #f44336; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Logout
+        </button>
+    </form>
+</div>
     <img src="https://s3-us-west-2.amazonaws.com/scorestream-team-profile-pictures/285522/20181011000648_310_mascot1280Near.png" alt="Logo" class="logo">
 </body>
 </html>
