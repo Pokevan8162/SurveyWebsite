@@ -1,7 +1,6 @@
 <?php
-//start session
-session_start();
 require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/../backend/session_check.php';
 
 try {
     // session check
@@ -22,11 +21,12 @@ try {
 	<link rel="stylesheet" href="../resources/css/introPages.css">
 </head>
 <body>	
-	<a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
+	<!-- <a href="adminIndex.php"><img src="../images/logo.png" alt="Logo" class="logo"></a> -->
 	<div class="container">
 		<div class="form_area">
 		<div class="title">Welcome to the Administrator Page</div>
-			<a href="manageUsers.php"><button type="button" class="btn">Manage Users</button></a>
+			
+		<!-- <a href="manageUsers.php"><button type="button" class="btn">Manage Users</button></a> -->
 			<a href="listSurveys.php"><button type="button" class="btn">See Survey Results</button></a>
 			<a href="viewSurveys.php"><button type="button" class="btn">Update Surveys</button></a>
 			<a href="createSurvey.php"><button type="button" class="btn">Create Survey</button></a>
