@@ -2,6 +2,16 @@
     require_once __DIR__ . '/../backend/db.php';
     require_once __DIR__ . '/../backend/session_check.php';
 
+    try {
+        // session check
+        if (!isset($_SESSION['user_id'])) {
+            echo "<a href=login.php>Please log in.</a>";
+    	    exit;
+        }
+    } catch (PDOException $e) {
+        echo 'Database error: ' . $e->getMessage();
+    }
+
     // Define a function to display messages
     function displayMessage() {
         echo "<div class='message'>{$_SESSION['message']}</div>";
