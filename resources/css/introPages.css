@@ -1,5 +1,4 @@
 body {
-    background: url('background-image.jpg') no-repeat center center/cover;
     font-family: Arial, sans-serif;
     color: black;
     display: flex;
@@ -140,4 +139,15 @@ body {
 
 .btn:hover {
     opacity: 0.9;
+}
+
+.survey {
+    background-color: #ffffffcc;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 2px 2px 0px 0px #a7192f;
 }
