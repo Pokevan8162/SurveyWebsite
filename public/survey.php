@@ -2,12 +2,26 @@
     require_once __DIR__ . '/../backend/db.php';
     require_once __DIR__ . '/../backend/session_check.php';
 
+    try {
+        // session check
+        if (!isset($_SESSION['user_id'])) {
+            echo "<a href=login.php>Please log in.</a>";
+    	    exit;
+    }
+} catch (PDOException $e) {
+    echo 'Database error: ' . $e->getMessage();
+}
+
     $surveyID = $_SESSION['SurveyID'];
     $userID = $_SESSION['user_id'];
 
     $stmt = $conn->prepare("SELECT * FROM RESPONSES WHERE SurveyID = ? AND UserID = ?");
     $stmt->execute([$surveyID, $userID]);
     $responses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("SELECT Gender FROM USERS WHERE UserID = ?");
+    $stmt->execute(params: [$userID]);
+    $userGender = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!empty($responses)) {
         $_SESSION['message'] = "You have already taken this survey.";
@@ -16,8 +30,8 @@
     }
 
     // Fetch only questions for this specific survey by ID
-    $stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? ORDER BY QuestionNumber ASC");
-    $stmt->execute([$surveyID]);
+    $stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? AND QuestionGender = ? ORDER BY QuestionNumber ASC");
+    $stmt->execute([$surveyID, $userGender]);
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Handle form submission
