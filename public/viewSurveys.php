@@ -1,7 +1,6 @@
 <?php
-//start session
-session_start();
 require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/../backend/session_check.php';
 
 try {
     $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
@@ -25,7 +24,7 @@ try {
     <link rel="stylesheet" href="../resources/css/usersCSS.css">
 </head>
 <body>
-    <a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
+    <a href="adminIndex.php"><img src="../resources/images/logo.png" alt="Logo" class="logo"></a>
     <div class="header">
         <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
     </div>
@@ -36,7 +35,7 @@ try {
             $surveys = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($surveys as $survey) {
-                echo "<div class='survey'>";
+                echo "<div class='form_area'>";
                 echo "<h3>$survey[SurveyName]</h3>";
                 echo "<a href='updateSurvey.php?SurveyID=$survey[SurveyID]'><button type='button' class='btn'>Update</button></a>";
                 echo "</div>";
