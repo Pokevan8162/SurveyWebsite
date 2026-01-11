@@ -2,13 +2,23 @@
 require_once __DIR__ . '/../backend/db.php';
 require_once __DIR__ . '/../backend/session_check.php';
 
+try {
+    // session check
+    if (!isset($_SESSION['user_id'])) {
+        echo "<a href=login.php>Please log in.</a>";
+    	exit;
+    }
+} catch (PDOException $e) {
+    echo 'Database error: ' . $e->getMessage();
+}
+
 // Get current userID and last completed SurveyID
 $userID = $_SESSION['user_id'];
 $surveyID = $_SESSION['SurveyID'];
 
-$stmt = $conn->prepare("SELECT UserID FROM Responses WHERE SurveyID = ? AND UserID != ?");
+$stmt = $conn->prepare("SELECT UserID FROM Responses WHERE SurveyID = :surveyID AND UserID != :userID");
 $stmt->execute([$surveyID, $userID]);
-$userIDs = $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch a column of userIDs
+$userIDs = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 if (count($userIDs) > 0) {
     $randomIndex = rand(1, count($userIDs) - 1);
@@ -22,12 +32,8 @@ if (count($userIDs) > 0) {
         AND r.QuestionNumber = q.QuestionNumber
         WHERE r.SurveyID = :surveyID AND r.UserID = :userID
     ");
-
-    // Bind parameters
     $stmt->bindParam(':surveyID', $surveyID, PDO::PARAM_INT);
     $stmt->bindParam(':userID', $randomID, PDO::PARAM_INT);
-
-    // Execute the query
     $stmt->execute();
 
     // Fetch the random response
@@ -45,7 +51,6 @@ if (count($userIDs) > 0) {
             echo "</div>";
         }
 
-        // Reflection form
         // Reflection form
         ?>
         <form action="thankyou.php" method="post">
@@ -76,5 +81,5 @@ if (count($userIDs) > 0) {
 <head>
     <meta charset="UTF-8">
     <title>Review an Anonymous Survey</title>
-    <link rel="stylesheet" href="../resources/css/anonymousSurvey.css"> 
+    <link rel="stylesheet" href="../resources/css/survey.css"> 
 </head>
