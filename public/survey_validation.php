@@ -1,12 +1,15 @@
 <?php
 require_once __DIR__ . '/../backend/db.php';
-session_start();
+require_once __DIR__ . '/../backend/session_check.php';
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "<p>You must be logged in to take surveys.</p>";
-    echo "<a href='index.php'>Back Home</a>";
-    exit;
+try {
+    // session check
+    if (!isset($_SESSION['user_id'])) {
+        echo "<a href=login.php>Please log in.</a>";
+    	exit;
+    }
+} catch (PDOException $e) {
+    echo 'Database error: ' . $e->getMessage();
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["survey_id"])) {
