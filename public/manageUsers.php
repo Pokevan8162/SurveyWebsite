@@ -1,19 +1,16 @@
 <?php
-    //session start
-    session_start();
-    require_once __DIR__ . '/../backend/db.php';
-    try {
-        $conn = new PDO("mysql:host=localhost;dbname=survey_db", 'root', '');
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-        // session check
-        if (!isset($_SESSION['user_id'])) {
-            echo "<a href=login.php>Please log in.</a>";
-            exit;
-        }
-    } catch (PDOException $e) {
-        echo 'Database error: ' . $e->getMessage();
+require_once __DIR__ . '/../backend/db.php';
+require_once __DIR__ . '/../backend/session_check.php';
+
+try {
+    // session check
+    if (!isset($_SESSION['user_id'])) {
+        echo "<a href=login.php>Please log in.</a>";
+    	exit;
     }
+} catch (PDOException $e) {
+    echo 'Database error: ' . $e->getMessage();
+}
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -24,7 +21,7 @@
     <link rel="stylesheet" href="../resources/css/usersCSS.css">
 </head>
 <body>
-    <a href="adminIndex.php"><img src="logo.png" alt="Logo" class="logo"></a>
+    <a href="adminIndex.php"><img src="../resources/images/logo.png" alt="Logo" class="logo"></a>
     <div class="header">
         <a href="logout.php" class="logout"><button type="button" class="btn">Logout</button></a>
     </div>
