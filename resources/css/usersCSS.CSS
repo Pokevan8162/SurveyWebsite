@@ -1,5 +1,4 @@
 body {
-    background: url('background-image.jpg') no-repeat center center/cover;
     font-family: Arial, sans-serif;
     color: black;
     display: inline;
@@ -88,6 +87,7 @@ body {
 .btn:hover {
     opacity: 0.9;
 }
+
 .logout {
     position: relative;
     top: 20px;
@@ -104,4 +104,8 @@ body {
 .link:hover {
     color: #a7192f;
     text-decoration: underline;
+}
+
+.question {
+    margin-bottom: 20%;
 }
