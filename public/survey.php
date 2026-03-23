@@ -30,7 +30,7 @@
     }
 
     // Fetch only questions for this specific survey by ID
-    $stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? AND QuestionGender = ? ORDER BY QuestionNumber ASC");
+    $stmt = $conn->prepare("SELECT * FROM QUESTIONS WHERE SurveyID = ? AND (QuestionGender = ? OR QuestionGender = 'Neutral') ORDER BY QuestionNumber ASC");
     $stmt->execute([$surveyID, $userGender]);
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
